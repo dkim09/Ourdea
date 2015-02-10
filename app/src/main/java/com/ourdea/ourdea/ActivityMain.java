@@ -51,7 +51,7 @@ public class ActivityMain extends Activity {
         Map<String, String> params = new HashMap<String, String>();
         params.put("email", "bob@test.com");
         JsonObjectParamsRequest jsonObjectParamsRequest = new JsonObjectParamsRequest
-                (Request.Method.GET, "http://10.0.2.2:9000/user/all", params, new Response.Listener<JSONObject>() {
+                (Request.Method.GET, "http://192.168.0.28:9000/user/all", params, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("TESTING", "response: " + response.toString());
