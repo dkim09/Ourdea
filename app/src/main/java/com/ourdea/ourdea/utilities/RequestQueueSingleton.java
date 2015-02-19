@@ -1,4 +1,4 @@
-package com.ourdea.ourdea;
+package com.ourdea.ourdea.utilities;
 
 import android.content.Context;
 
