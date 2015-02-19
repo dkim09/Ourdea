@@ -1,6 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Ourdea</string>
 
+    <string name="app_name">Ourdea</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_task">Tasks</string>
+    <string name="title_section1">Me</string>
+    <string name="title_section2">To Do</string>
+    <string name="title_section3">In Progress</string>
+    <string name="title_section4">Done</string>
+
 </resources>

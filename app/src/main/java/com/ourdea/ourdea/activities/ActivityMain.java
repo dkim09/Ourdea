@@ -2,11 +2,13 @@ package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.api.User;
@@ -53,14 +55,14 @@ public class ActivityMain extends Activity {
             new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    Log.d("SERVER", "User created");
+                    Log.d("SERVER_SUCCESS", "User created");
                     login();
                 }
             },
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("SERVER", "User could not be created");
+                    Log.d("SERVER_ERROR", "User could not be created");
 
                     // We try to login anyway in case that user exists already
                     login();
@@ -69,17 +71,20 @@ public class ActivityMain extends Activity {
     }
 
     private void login() {
+        final Context ctx = this;
         User.login("bob@email.com", "test1234", this,
         new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.d("SERVER", "User logged in");
+                Log.d("SERVER_SUCCESS", "User logged in");
+                Intent intent = new Intent(ctx, TaskActivity.class);
+                startActivity(intent);
             }
         },
         new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("SERVER", "User could not login");
+                Log.d("SERVER_ERROR", "User could not login");
             }
         });
     }
