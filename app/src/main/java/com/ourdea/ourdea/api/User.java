@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 public class User {
 
-    public static void create(final String email, final String name, final String password, Context context, Response.Listener<JSONObject> successResponse, Response.ErrorListener errorResponse) {
+    public static void create(final String email, final String name, final String password, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("email", email);
@@ -26,7 +26,7 @@ public class User {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void login(final String email, final String password, Context context, Response.Listener<JSONObject> successResponse, Response.ErrorListener errorResponse) {
+    public static void login(final String email, final String password, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("email", email);

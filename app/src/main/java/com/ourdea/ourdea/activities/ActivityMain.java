@@ -69,7 +69,8 @@ public class ActivityMain extends Activity {
     }
 
     private void login() {
-        User.login("bob@email.com", "test1234", this, new Response.Listener<JSONObject>() {
+        User.login("bob@email.com", "test1234", this,
+        new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Log.d("SERVER", "User logged in");
