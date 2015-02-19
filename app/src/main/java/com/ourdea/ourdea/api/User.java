@@ -39,12 +39,9 @@ public class User {
                 (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/login", params, successResponse, errorResponse) {
             @Override
             protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                // Store session id for future API call
                 String sessionId = response.headers.get("Set-Cookie");
-                // Need to store session ID for subsequent API calls
-                SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("store", 0);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString("sessionId", sessionId);
-                editor.commit();
+                ApiUtilities.Session.storeSession(sessionId, context);
 
                 return super.parseNetworkResponse(response);
             }

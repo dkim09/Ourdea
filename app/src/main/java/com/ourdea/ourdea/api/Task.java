@@ -18,8 +18,7 @@ public class Task {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
-                String sessionId = context.getApplicationContext().getSharedPreferences("store", 0).getString("sessionId", "");
-                params.put("Cookie", sessionId);
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
 
                 return params;
             }
