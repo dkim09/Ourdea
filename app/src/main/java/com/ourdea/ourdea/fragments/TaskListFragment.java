@@ -1,8 +1,8 @@
 package com.ourdea.ourdea.fragments;
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,15 +20,6 @@ import com.ourdea.ourdea.api.models.TaskModel;
 
 import org.json.JSONArray;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
- * interface.
- */
 public class TaskListFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     private static final String ARG_SECTION = "section";

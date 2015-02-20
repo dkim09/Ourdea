@@ -1,7 +1,6 @@
 package com.ourdea.ourdea.api;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
