@@ -2,16 +2,29 @@ package com.ourdea.ourdea.api;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.ourdea.ourdea.utilities.RequestQueueSingleton;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class UserApi {
+
+    public static void getAll(final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (ApiUtilities.SERVER_ADDRESS + "/user/all", successResponse, errorResponse);
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
+    }
+
 
     public static void create(final String email, final String name, final String password, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();

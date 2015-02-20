@@ -24,7 +24,7 @@ public class TaskModel {
             this.id = jsonObject.getString("id");
             this.name = jsonObject.getString("name");
             this.description = jsonObject.getString("description");
-            this.assignedTo = jsonObject.getJSONObject("assignedTo").getString("name");
+            this.assignedTo = jsonObject.getJSONObject("assignedTo").getString("email");
             this.label = jsonObject.getJSONObject("label").getString("name");
             this.dueDate = jsonObject.get("dueDate");
         } catch (Exception exception) {

@@ -46,12 +46,13 @@ public class TaskApi {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
     }
 
-    public static void create(final String name, final String description, final String label, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void create(final String name, final String description, final String label, final String assignedTo, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("description", description);
             params.put("name", name);
             params.put("label", label);
+            params.put("assignedTo", assignedTo);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -68,16 +69,47 @@ public class TaskApi {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void update(final String taskId, final String name, final String description, final String label, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void update(final String taskId, final String name, final String description, final String label, final String assignedTo, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("description", description);
             params.put("name", name);
             params.put("label", label);
+            params.put("assignedTo", assignedTo);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/task/" + taskId, params, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public static void updateStatus(final String taskId, final String newStatus, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/task/" + taskId + "/" + newStatus, null, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    };
+
+    public static void delete(final String taskId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+       JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.DELETE, ApiUtilities.SERVER_ADDRESS + "/task/" + taskId, null, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
