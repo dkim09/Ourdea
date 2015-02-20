@@ -2,7 +2,7 @@ package com.ourdea.ourdea.api.models;
 
 import org.json.JSONObject;
 
-public class Task {
+public class TaskModel {
     private String label;
     private String description;
     private String assignedTo;
@@ -10,7 +10,7 @@ public class Task {
     private String id;
     private String name;
 
-    public Task(String id, String name, String description, String assignedTo, String label, String dueDate) {
+    public TaskModel(String id, String name, String description, String assignedTo, String label, String dueDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -19,13 +19,13 @@ public class Task {
         this.dueDate = dueDate;
     }
 
-    public Task(JSONObject jsonObject) {
+    public TaskModel(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString("id");
             this.name = jsonObject.getString("name");
             this.description = jsonObject.getString("description");
-            this.assignedTo = jsonObject.getString("assignedTo");
-            this.label = jsonObject.getString("label");
+            this.assignedTo = jsonObject.getJSONObject("assignedTo").getString("name");
+            this.label = jsonObject.getJSONObject("label").getString("name");
             this.dueDate = jsonObject.get("dueDate");
         } catch (Exception exception) {
 

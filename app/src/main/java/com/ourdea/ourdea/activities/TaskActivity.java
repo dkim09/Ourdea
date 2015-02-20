@@ -1,5 +1,6 @@
 package com.ourdea.ourdea.activities;
 
+import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
@@ -7,6 +8,7 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -21,19 +23,8 @@ import com.ourdea.ourdea.fragments.TaskListFragment;
 
 public class TaskActivity extends Activity implements ActionBar.TabListener, TaskListFragment.OnFragmentInteractionListener {
 
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v13.app.FragmentStatePagerAdapter}.
-     */
     SectionsPagerAdapter mSectionsPagerAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     ViewPager mViewPager;
 
     @Override
@@ -41,7 +32,6 @@ public class TaskActivity extends Activity implements ActionBar.TabListener, Tas
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
@@ -91,8 +81,9 @@ public class TaskActivity extends Activity implements ActionBar.TabListener, Tas
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add_task) {
+            Intent intent = new Intent(this, AddTaskActivity.class);
+            startActivity(intent);
             return true;
         }
 
@@ -124,6 +115,8 @@ public class TaskActivity extends Activity implements ActionBar.TabListener, Tas
      * one of the sections/tabs/pages.
      */
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        private List<Fragment> fragments;
 
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);

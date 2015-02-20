@@ -26,6 +26,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ourdea.ourdea.activities.ActivityMain" />
         </activity>
+        <activity
+            android:name=".activities.AddTaskActivity"
+            android:label="@string/title_activity_add_task"
+            android:parentActivityName=".activities.TaskActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ourdea.ourdea.activities.TaskActivity" />
+        </activity>
     </application>
 
 </manifest>

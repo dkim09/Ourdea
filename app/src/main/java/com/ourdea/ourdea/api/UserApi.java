@@ -12,7 +12,7 @@ import com.ourdea.ourdea.utilities.RequestQueueSingleton;
 import org.json.JSONObject;
 
 
-public class User {
+public class UserApi {
 
     public static void create(final String email, final String name, final String password, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();

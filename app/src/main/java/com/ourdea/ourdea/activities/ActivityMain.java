@@ -8,10 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.ourdea.ourdea.api.User;
+import com.ourdea.ourdea.api.UserApi;
 import com.ourdea.ourdea.R;
 
 import org.json.JSONObject;
@@ -50,42 +49,42 @@ public class ActivityMain extends Activity {
 
     private void createUserAndLogin() {
         final Context ctx = this;
-        User.create("bob@email.com", "Bob", "test1234",
-            ctx,
-            new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.d("SERVER_SUCCESS", "User created");
-                    login();
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("SERVER_ERROR", "User could not be created");
+        UserApi.create("bob@email.com", "Bob", "test1234",
+                ctx,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("SERVER_SUCCESS", "User created");
+                        login();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("SERVER_ERROR", "User could not be created");
 
-                    // We try to login anyway in case that user exists already
-                    login();
-                }
-            });
+                        // We try to login anyway in case that user exists already
+                        login();
+                    }
+                });
     }
 
     private void login() {
         final Context ctx = this;
-        User.login("bob@email.com", "test1234", this,
-        new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.d("SERVER_SUCCESS", "User logged in");
-                Intent intent = new Intent(ctx, TaskActivity.class);
-                startActivity(intent);
-            }
-        },
-        new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("SERVER_ERROR", "User could not login");
-            }
-        });
+        UserApi.login("bob@email.com", "test1234", this,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("SERVER_SUCCESS", "User logged in");
+                        Intent intent = new Intent(ctx, TaskActivity.class);
+                        startActivity(intent);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("SERVER_ERROR", "User could not login");
+                    }
+                });
     }
 }

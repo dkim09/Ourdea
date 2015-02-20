@@ -10,19 +10,15 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.api.Task;
+import com.ourdea.ourdea.api.TaskApi;
+import com.ourdea.ourdea.api.models.TaskModel;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -41,18 +37,12 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
 
     private OnFragmentInteractionListener mListener;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView mListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-    private ListAdapter mAdapter;
+    private ArrayAdapter<TaskModel> mAdapter;
 
-    // TODO: Rename and change types of parameters
+    private TaskListContent taskListContent;
+
     public static TaskListFragment newInstance(String position) {
         TaskListFragment fragment = new TaskListFragment();
         Bundle args = new Bundle();
@@ -61,20 +51,20 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         return fragment;
     }
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
     public TaskListFragment() { }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1);
+
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);
         }
+    }
 
+    private void loadTasks() {
         String taskListType = "me";
         switch (Integer.valueOf(section)) {
             case 1:
@@ -89,35 +79,47 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
             case 4:
                 taskListType = "completed";
                 break;
-        };
-
-        Task.getAll(taskListType, this.getActivity(),
-             new Response.Listener<JSONArray>() {
-                @Override
-                public void onResponse(JSONArray response) {
-                    Log.d("SERVER_SUCCESS", "Task list retrieved");
-                    TaskListContent taskListContent = new TaskListContent(response);
-                    mAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, taskListContent.getTaskItems());
-                }
-             },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("SERVER_ERROR", "Task list cannot be retrieved");
-                }
-            });
         }
+
+        TaskApi.getAll(taskListType, this.getActivity(),
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("SERVER_SUCCESS", "TaskModel list retrieved");
+                        taskListContent = new TaskListContent(response);
+                        buildTaskList();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("SERVER_ERROR", "TaskModel list cannot be retrieved");
+                    }
+                });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadTasks();
+        if (taskListContent != null) buildTaskList();
+    }
+
+    private void buildTaskList() {
+        mAdapter.clear();
+        for (TaskModel task : taskListContent.getTaskItems()) {
+            mAdapter.add(task);
+        }
+        mAdapter.notifyDataSetChanged();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_task2, container, false);
+        View view = inflater.inflate(R.layout.fragment_task, container, false);
 
-        // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
+        mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
 
         return view;
