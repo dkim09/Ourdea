@@ -27,7 +27,7 @@
                 android:value="com.ourdea.ourdea.activities.ActivityMain" />
         </activity>
         <activity
-            android:name=".activities.AddTaskActivity"
+            android:name=".activities.AddEditTaskActivity"
             android:label="@string/title_activity_add_task"
             android:parentActivityName=".activities.TaskActivity" >
             <meta-data

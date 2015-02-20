@@ -2,6 +2,7 @@ package com.ourdea.ourdea.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.activities.AddEditTaskActivity;
 import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.api.models.TaskModel;
 
@@ -133,14 +135,17 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         mListener = null;
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            //mListener.onFragmentInteraction(TaskListContent.ITEMS.get(position).id);
-        }
+        //if (null != mListener) {
+        // Notify the active callbacks interface (the activity, if the
+        // fragment is attached to one) that an item has been selected.
+        //mListener.onFragmentInteraction(TaskListContent.ITEMS.get(position).id);
+        //}
+        Intent intent = new Intent(this.getActivity(), AddEditTaskActivity.class);
+        String taskId = ((TaskModel) parent.getAdapter().getItem(position)).getId();
+        intent.putExtra("taskId", taskId);
+        startActivity(intent);
     }
 
     /**

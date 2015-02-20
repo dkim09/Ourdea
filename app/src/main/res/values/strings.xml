@@ -10,5 +10,6 @@
     <string name="title_section3">In Progress</string>
     <string name="title_section4">Done</string>
     <string name="title_activity_add_task">Add New Task</string>
+    <string name="title_activity_edit_task">Edit Task</string>
 
 </resources>

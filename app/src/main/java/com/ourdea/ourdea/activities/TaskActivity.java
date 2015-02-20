@@ -79,7 +79,7 @@ public class TaskActivity extends Activity implements ActionBar.TabListener, Tas
         int id = item.getItemId();
 
         if (id == R.id.action_add_task) {
-            Intent intent = new Intent(this, AddTaskActivity.class);
+            Intent intent = new Intent(this, AddEditTaskActivity.class);
             startActivity(intent);
             return true;
         }

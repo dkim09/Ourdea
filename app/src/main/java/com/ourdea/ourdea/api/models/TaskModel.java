@@ -36,4 +36,28 @@ public class TaskModel {
     public String toString() {
         return name;
     }
+
+    public String getId() {
+        return id;
+    }
+    public String getLabel() {
+        return label;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getAssignedTo() {
+        return assignedTo;
+    }
+
+    public Object getDueDate() {
+        return dueDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
 }
