@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical" android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/layout_type"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/type_background"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingRight="15dp"
+        android:paddingEnd="15dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:id="@+id/txt_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/img_type"
+            android:layout_marginRight="15dp"
+            android:layout_marginEnd="15dp"
+            android:maxLines="4"
+            android:enabled="false"
+            android:maxLength="500" />
+
+        <ImageButton
+            android:id="@+id/btn_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:src="@drawable/img_send" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@id/android:list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:listSelector="@color/transparent"
+        android:cacheColorHint="@color/transparent"
+        android:dividerHeight="8dp"
+        android:divider="@null"
+        android:layout_gravity="center"
+        android:layout_above="@+id/layout_type" />
+
+</RelativeLayout>
