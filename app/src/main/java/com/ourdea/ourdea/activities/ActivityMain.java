@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.api.UserApi;
+import com.ourdea.ourdea.gcm.GCMUtil;
 
 import org.json.JSONObject;
 
@@ -22,7 +22,7 @@ public class ActivityMain extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        createUserAndLogin();
+        registerGcm();
     }
 
     @Override
@@ -32,24 +32,26 @@ public class ActivityMain extends Activity {
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    private void registerGcm (){
+        GCMUtil gcmUtil = new GCMUtil(this);
+        String gcmId = gcmUtil.getRegistrationId();
+        if (gcmId.equals("")) {
+            Log.d("TESTING", "no GCM");
+            gcmUtil.registerInBackground(new GCMUtil.GCMRegistrationListener() {
+                @Override
+                public void onRegistrationComplete(String gcmId) {
+                    createUserAndLogin("bob@email.com", "Bob", "test1234", gcmId);
+                }
+            });
+        } else {
+            createUserAndLogin("bob@email.com", "Bob", "test1234", gcmId);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
-    private void createUserAndLogin() {
+    private void createUserAndLogin(String email, String name, String password, String gcmId) {
+        Log.d("TESTING", "gcm: " + gcmId);
         final Context ctx = this;
-        UserApi.create("bob@email.com", "Bob", "test1234",
+        UserApi.create(email, name, password, gcmId,
                 ctx,
                 new Response.Listener<JSONObject>() {
                     @Override

@@ -3,6 +3,13 @@
     package="com.ourdea.ourdea" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <permission android:name="com.ourdea.ourdea.permission.C2D_MESSAGE"
+                android:protectionLevel="signature" />
+    <uses-permission android:name="com.ourdea.ourdea.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
@@ -34,6 +41,23 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ourdea.ourdea.activities.TaskActivity" />
         </activity>
+        <activity android:name=".activities.ChatActivity" android:label="@string/title_activity_chat" android:parentActivityName=".activities.ActivityMain" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ourdea.ourdea.activities.TaskActivity" />
+        </activity>
+
+        <!-- GCM -->
+        <receiver
+            android:name=".gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.ourdea.ourdea" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GCMIntentService" />
+
     </application>
 
 </manifest>

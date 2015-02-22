@@ -11,5 +11,10 @@
     <string name="title_section4">Done</string>
     <string name="title_activity_add_task">Add New Task</string>
     <string name="title_activity_edit_task">Edit Task</string>
+    <string name="title_activity_chat">Chat</string>
+
+    <string name="PROPERTY_NAME">OURDEA_PROPERTY</string>
+    <string name="PROPERTY_GCM_ID">gcmId</string>
+    <string name="PROPERTY_GCM_NOTIFICATION_ID">gcmId</string>
 
 </resources>

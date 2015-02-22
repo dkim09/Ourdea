@@ -2,7 +2,6 @@ package com.ourdea.ourdea.api;
 
 import android.content.Context;
 
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -11,9 +10,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.ourdea.ourdea.utilities.RequestQueueSingleton;
 
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class UserApi {
@@ -26,12 +22,13 @@ public class UserApi {
     }
 
 
-    public static void create(final String email, final String name, final String password, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void create(final String email, final String name, final String password, final String gcmId, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("email", email);
             params.put("name", name);
             params.put("password", password);
+            params.put("gcmId", gcmId);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
