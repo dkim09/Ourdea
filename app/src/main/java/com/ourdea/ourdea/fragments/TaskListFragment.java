@@ -17,6 +17,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.activities.AddEditTaskActivity;
+import com.ourdea.ourdea.adapters.TaskListAdapter;
 import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.api.models.TaskModel;
 
@@ -50,7 +51,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1);
+        mAdapter = new TaskListAdapter(getActivity(), R.layout.item_task);
 
         if (getArguments() != null) {
             section = getArguments().getString(ARG_SECTION);

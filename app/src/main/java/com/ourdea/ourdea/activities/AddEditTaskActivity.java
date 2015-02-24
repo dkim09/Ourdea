@@ -57,24 +57,26 @@ public class AddEditTaskActivity extends Activity {
         assigneeAutoCompleteTextView.setText("me");
 
         // Load task if needed
-        TaskApi.get(taskId, context,
-            new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    TaskModel task = new TaskModel(response);
-                    labelAutoCompleteTextView.setText(task.getLabel());
-                    assigneeAutoCompleteTextView.setText(task.getAssignedTo());
-                    name.setText(task.getName());
-                    description.setText(task.getDescription());
-                    Log.d("SERVER_SUCCESS", "Task loaded");
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("SERVER_ERROR", "Task could not be loaded");
-                }
-            });
+        if (taskId != null) {
+            TaskApi.get(taskId, context,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            TaskModel task = new TaskModel(response);
+                            labelAutoCompleteTextView.setText(task.getLabel());
+                            assigneeAutoCompleteTextView.setText(task.getAssignedTo());
+                            name.setText(task.getName());
+                            description.setText(task.getDescription());
+                            Log.d("SERVER_SUCCESS", "Task loaded");
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("SERVER_ERROR", "Task could not be loaded");
+                        }
+                    });
+        }
 
         // Load labels
         LabelApi.getAll(this,
