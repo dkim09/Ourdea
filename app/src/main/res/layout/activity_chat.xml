@@ -6,4 +6,14 @@
               android:layout_height="match_parent"
               tools:context="com.ourdea.ourdea.activities.ChatActivity">
 
+    <fragment
+        android:id="@+id/fragment_chat"
+        android:name="com.ourdea.ourdea.fragments.ChatFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_actionbar"
+        android:layout_above="@+id/layout_type"
+        android:layout_centerHorizontal="true"
+        tools:layout="@layout/fragment_chat" />
+
 </LinearLayout>
