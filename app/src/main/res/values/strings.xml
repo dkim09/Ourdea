@@ -34,4 +34,6 @@
         <item>Map</item>
     </string-array>
 
+    <string name="title_activity_meeting">Meetings</string>
+
 </resources>

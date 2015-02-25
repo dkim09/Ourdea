@@ -98,7 +98,9 @@ public class DrawerActivity extends Activity {
                     break;
                 case "Chat":
                     intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    break;
                 case "Meetings":
+                    intent = new Intent(getApplicationContext(), MeetingActivity.class);
                     break;
                 case "Map":
                     break;

@@ -65,8 +65,15 @@
 
         <service android:name=".gcm.GCMIntentService" />
 
+        <activity android:name=".activities.DrawerActivity" >
+        </activity>
         <activity
-            android:name=".activities.DrawerActivity">
+            android:name=".activities.MeetingActivity"
+            android:label="@string/title_activity_meeting"
+            android:parentActivityName=".activities.DashboardActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ourdea.ourdea.activities.DashboardActivity" />
         </activity>
     </application>
 

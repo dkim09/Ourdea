@@ -12,10 +12,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.api.ApiUtilities;
 import com.ourdea.ourdea.api.LabelApi;
 import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.api.UserApi;
@@ -54,7 +56,15 @@ public class AddEditTaskActivity extends Activity {
         final EditText name = (EditText) findViewById(R.id.name);
         final EditText description = (EditText) findViewById(R.id.description);
 
-        assigneeAutoCompleteTextView.setText("me");
+        //assigneeAutoCompleteTextView.setText("me");
+        // Set on click listener
+        ImageView assignToMeImageView = (ImageView) findViewById(R.id.action_assign_to_me);
+        assignToMeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                assigneeAutoCompleteTextView.setText(ApiUtilities.Session.getUser(getApplicationContext()));
+            }
+        });
 
         // Load task if needed
         if (taskId != null) {

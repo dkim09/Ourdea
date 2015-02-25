@@ -51,6 +51,7 @@ public class UserApi {
                 // Store session id for future API call
                 String sessionId = response.headers.get("Set-Cookie");
                 ApiUtilities.Session.storeSession(sessionId, context);
+                ApiUtilities.Session.storeUser(email, context);
 
                 return super.parseNetworkResponse(response);
             }
