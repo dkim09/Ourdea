@@ -8,9 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.api.models.TaskModel;
+import com.ourdea.ourdea.dto.TaskDto;
 
-public class TaskListAdapter extends ArrayAdapter<TaskModel> {
+public class TaskListAdapter extends ArrayAdapter<TaskDto> {
 
     public TaskListAdapter(Context context, int resource) {
         super(context, resource);
@@ -25,7 +25,7 @@ public class TaskListAdapter extends ArrayAdapter<TaskModel> {
             view = layoutInflater.inflate(R.layout.item_task, null);
         }
 
-        TaskModel task = super.getItem(position);
+        TaskDto task = super.getItem(position);
 
         TextView taskName = (TextView) view.findViewById(R.id.task_name);
         taskName.setText(task.getName());

@@ -1,8 +1,8 @@
-package com.ourdea.ourdea.api.models;
+package com.ourdea.ourdea.dto;
 
 import org.json.JSONObject;
 
-public class TaskModel {
+public class TaskDto {
     private String label;
     private String description;
     private String assignedTo;
@@ -10,7 +10,7 @@ public class TaskModel {
     private String id;
     private String name;
 
-    public TaskModel(String id, String name, String description, String assignedTo, String label, String dueDate) {
+    public TaskDto(String id, String name, String description, String assignedTo, String label, String dueDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -19,7 +19,7 @@ public class TaskModel {
         this.dueDate = dueDate;
     }
 
-    public TaskModel(JSONObject jsonObject) {
+    public TaskDto(JSONObject jsonObject) {
         try {
             this.id = jsonObject.getString("id");
             this.name = jsonObject.getString("name");

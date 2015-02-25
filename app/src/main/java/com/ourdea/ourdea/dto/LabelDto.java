@@ -1,8 +1,8 @@
-package com.ourdea.ourdea.api.models;
+package com.ourdea.ourdea.dto;
 
 import org.json.JSONObject;
 
-public class LabelModel {
+public class LabelDto {
 
     private String name;
 
@@ -10,11 +10,11 @@ public class LabelModel {
         return name;
     }
 
-    public LabelModel(String name) {
+    public LabelDto(String name) {
         this.name = name;
     }
 
-    public LabelModel(JSONObject jsonObject) {
+    public LabelDto(JSONObject jsonObject) {
         try {
             this.name = jsonObject.getString("name");
         } catch (Exception exception) { }

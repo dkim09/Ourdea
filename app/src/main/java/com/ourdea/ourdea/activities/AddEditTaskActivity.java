@@ -19,8 +19,8 @@ import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.api.LabelApi;
 import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.api.UserApi;
-import com.ourdea.ourdea.api.models.LabelModel;
-import com.ourdea.ourdea.api.models.TaskModel;
+import com.ourdea.ourdea.dto.LabelDto;
+import com.ourdea.ourdea.dto.TaskDto;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,7 +62,7 @@ public class AddEditTaskActivity extends Activity {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            TaskModel task = new TaskModel(response);
+                            TaskDto task = new TaskDto(response);
                             labelAutoCompleteTextView.setText(task.getLabel());
                             assigneeAutoCompleteTextView.setText(task.getAssignedTo());
                             name.setText(task.getName());
@@ -88,7 +88,7 @@ public class AddEditTaskActivity extends Activity {
                         ArrayList<String> labels = new ArrayList<>();
                         for (int i = 0; i < response.length(); i++) {
                             try {
-                                LabelModel label = new LabelModel(response.getJSONObject(i));
+                                LabelDto label = new LabelDto(response.getJSONObject(i));
                                 labels.add(label.getName());
                             } catch (Exception exception) {
                             }

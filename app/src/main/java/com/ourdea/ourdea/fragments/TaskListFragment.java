@@ -19,7 +19,7 @@ import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.activities.AddEditTaskActivity;
 import com.ourdea.ourdea.adapters.TaskListAdapter;
 import com.ourdea.ourdea.api.TaskApi;
-import com.ourdea.ourdea.api.models.TaskModel;
+import com.ourdea.ourdea.dto.TaskDto;
 
 import org.json.JSONArray;
 
@@ -33,7 +33,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
 
     private AbsListView mListView;
 
-    private ArrayAdapter<TaskModel> mAdapter;
+    private ArrayAdapter<TaskDto> mAdapter;
 
     private TaskListContent taskListContent;
 
@@ -79,7 +79,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        Log.d("SERVER_SUCCESS", "TaskModel list retrieved");
+                        Log.d("SERVER_SUCCESS", "Task list retrieved");
                         taskListContent = new TaskListContent(response);
                         buildTaskList();
                     }
@@ -87,7 +87,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d("SERVER_ERROR", "TaskModel list cannot be retrieved");
+                        Log.d("SERVER_ERROR", "Task list cannot be retrieved");
                     }
                 });
     }
@@ -101,7 +101,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
 
     private void buildTaskList() {
         mAdapter.clear();
-        for (TaskModel task : taskListContent.getTaskItems()) {
+        for (TaskDto task : taskListContent.getTaskItems()) {
             mAdapter.add(task);
         }
         mAdapter.notifyDataSetChanged();
@@ -144,7 +144,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         //mListener.onFragmentInteraction(TaskListContent.ITEMS.get(position).id);
         //}
         Intent intent = new Intent(this.getActivity(), AddEditTaskActivity.class);
-        String taskId = ((TaskModel) parent.getAdapter().getItem(position)).getId();
+        String taskId = ((TaskDto) parent.getAdapter().getItem(position)).getId();
         intent.putExtra("taskId", taskId);
         startActivity(intent);
     }
