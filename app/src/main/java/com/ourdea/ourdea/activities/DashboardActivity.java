@@ -1,8 +1,6 @@
 package com.ourdea.ourdea.activities;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -15,12 +13,13 @@ import com.ourdea.ourdea.gcm.GCMUtil;
 import org.json.JSONObject;
 
 
-public class ActivityMain extends Activity {
+public class DashboardActivity extends DrawerActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        super.setActivity("Dashboard");
+        super.onCreate(savedInstanceState);
         registerGcm();
     }
 
@@ -70,8 +69,6 @@ public class ActivityMain extends Activity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("SERVER_SUCCESS", "User logged in");
-                        Intent intent = new Intent(ctx, TaskActivity.class);
-                        startActivity(intent);
                     }
                 },
                 new Response.ErrorListener() {

@@ -13,7 +13,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.activities.ActivityMain;
+import com.ourdea.ourdea.activities.DashboardActivity;
 
 public class GCMIntentService extends IntentService {
 
@@ -95,7 +95,7 @@ public class GCMIntentService extends IntentService {
         mNotificationManager = (NotificationManager)
                 this.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent notificationIntent = new Intent(this, ActivityMain.class);
+        Intent notificationIntent = new Intent(this, DashboardActivity.class);
         notificationIntent.putExtra(getString(R.string.PROPERTY_GCM_NOTIFICATION_ID), notificationId);
         PendingIntent contentIntent = PendingIntent.getActivity(this, notificationId, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
