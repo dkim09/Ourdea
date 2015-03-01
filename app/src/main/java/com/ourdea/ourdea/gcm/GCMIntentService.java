@@ -39,7 +39,7 @@ public class GCMIntentService extends IntentService {
         // The getMessageType() intent parameter must be the intent you received
         // in your BroadcastReceiver.
         String messageType = gcm.getMessageType(intent);
-
+        Log.d("TESTING", "JERER");
         if (!extras.isEmpty()) {  // has effect of unparcelling Bundle
             /*
              * Filter messages based on message type. Since it is likely that GCM
@@ -87,7 +87,7 @@ public class GCMIntentService extends IntentService {
     		title = getString(R.string.app_name);
     	}
 
-        int notificationId = -1;
+        int notificationId = 1;
     	if (message == null){
     		message = getString(R.string.app_name);
     	}

@@ -10,7 +10,6 @@
     <permission
         android:name="com.ourdea.ourdea.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
-
     <uses-permission android:name="com.ourdea.ourdea.permission.C2D_MESSAGE" />
 
     <application
@@ -52,19 +51,6 @@
                 android:value="com.ourdea.ourdea.activities.TaskActivity" />
         </activity>
 
-        <!-- GCM -->
-        <receiver
-            android:name=".gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="com.ourdea.ourdea" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".gcm.GCMIntentService" />
-
         <activity android:name=".activities.DrawerActivity" >
         </activity>
         <activity
@@ -75,6 +61,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ourdea.ourdea.activities.DashboardActivity" />
         </activity>
+
+        <!-- GCM -->
+        <receiver
+            android:name=".gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="com.ourdea.ourdea" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".gcm.GCMIntentService" />
     </application>
 
 </manifest>
