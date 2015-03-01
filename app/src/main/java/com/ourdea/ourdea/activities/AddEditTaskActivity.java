@@ -13,6 +13,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -155,6 +156,7 @@ public class AddEditTaskActivity extends Activity {
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
+                                    Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
                                     finish();
                                     Log.d("SERVER_SUCCESS", "Task created");
                                 }
@@ -171,6 +173,7 @@ public class AddEditTaskActivity extends Activity {
                             @Override
                             public void onResponse(Object response) {
                                 finish();
+                                Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
                                 Log.d("SERVER_SUCCESS", "Task saved");
                             }
                         },
@@ -209,6 +212,7 @@ public class AddEditTaskActivity extends Activity {
                 new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
+                        Toast.makeText(AddEditTaskActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
                         Log.d("SERVER_SUCCESS", "Task deleted");
                         finish();
                     }
@@ -225,6 +229,7 @@ public class AddEditTaskActivity extends Activity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Toast.makeText(AddEditTaskActivity.this, "Task completed", Toast.LENGTH_SHORT).show();
                         Log.d("SERVER_SUCCESS", "Task marked as done");
                         finish();
                     }
@@ -240,6 +245,7 @@ public class AddEditTaskActivity extends Activity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Toast.makeText(AddEditTaskActivity.this, "Task in progress", Toast.LENGTH_SHORT).show();
                         Log.d("SERVER_SUCCESS", "Task marked as inprogress");
                         finish();
                     }

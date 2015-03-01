@@ -66,7 +66,7 @@ public class RegisterActivity extends Activity {
                     @Override
                     public void onResponse(Object response) {
                         Log.d("TESTING", "response: " + response.toString());
-                        Toast.makeText(RegisterActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegisterActivity.this, "Account created!", Toast.LENGTH_LONG).show();
                         Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
                         startActivity(goLoginScreen);
                     }

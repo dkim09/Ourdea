@@ -12,30 +12,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/name"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:singleLine="true"
+        android:hint="Name"
         android:capitalize="sentences" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Name"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Description"
-        android:id="@+id/textView2"
-        android:layout_below="@+id/name"
-        android:layout_alignParentStart="true"
-        android:paddingTop="20px" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -43,51 +24,32 @@
         android:ems="10"
         android:id="@+id/description"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/name"
+        android:hint="Description"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:capitalize="sentences"
         android:singleLine="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Label"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/description"
-        android:layout_alignParentStart="true"
-        android:paddingTop="20px" />
 
     <AutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/label_autocomplete"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/description"
+        android:hint="Label"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:singleLine="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Assignee"
-        android:id="@+id/textView4"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:paddingTop="20px" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:id="@+id/assignee_layout"
-        android:layout_below="@+id/textView4"
+        android:layout_below="@+id/label_autocomplete"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/textView4">
+        android:layout_alignEnd="@+id/label_autocomplete">
 
         <AutoCompleteTextView
             android:layout_width="wrap_content"
@@ -95,6 +57,7 @@
             android:layout_weight="0.8"
             android:id="@+id/assignee"
             android:ems="4"
+            android:hint="Assignee"
             android:textColor="@android:color/black"
             android:singleLine="true" />
 
