@@ -14,7 +14,8 @@
                 tools:context=".ActivityMain">
 
     <TextView
-        android:text="@string/hello_world"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Dashboard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

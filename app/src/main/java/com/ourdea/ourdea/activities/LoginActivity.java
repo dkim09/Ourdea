@@ -12,21 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.utilities.RequestQueueSingleton;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
+import com.ourdea.ourdea.api.UserApi;
 
 
 public class LoginActivity extends Activity {
 
-    String loginURL = "http://192.168.0.21:9000/login";
     protected EditText mEmail;
     protected EditText mPassword;
     protected Button mLoginButton;
@@ -59,28 +52,22 @@ public class LoginActivity extends Activity {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
-                HashMap<String, String> loginInfo = new HashMap<String, String>();
-                loginInfo.put("email", email);
-                loginInfo.put("password", password);
-
-                JSONObject json = new JSONObject(loginInfo);
-                JsonObjectRequest request = new JsonObjectRequest
-                        (Request.Method.POST, loginURL, json, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                                Intent goMainScreen = new Intent(LoginActivity.this, DashboardActivity.class);
-                                startActivity(goMainScreen);
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("TESTING", "error: " + error.getMessage());
-                                Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                RequestQueueSingleton.getInstance(mContext).addToRequestQueue(request);
-
+                UserApi.login(email, password, getApplicationContext(),
+                    new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+                            Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                            Intent goMainScreen = new Intent(LoginActivity.this, DashboardActivity.class);
+                            startActivity(goMainScreen);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("TESTING", "error: " + error.getMessage());
+                            Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
+                        }
+                    });
             }
         });
     }

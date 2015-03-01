@@ -12,21 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.utilities.RequestQueueSingleton;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
+import com.ourdea.ourdea.api.UserApi;
+import com.ourdea.ourdea.gcm.GCMUtil;
 
 
 public class RegisterActivity extends Activity {
 
-    String createUserURL = "http://192.168.0.21:9000/user";
+    String createUserURL = "http://318af125.ngrok.com/user";
     protected EditText mUsername;
     protected EditText mEmail;
     protected EditText mPassword;
@@ -52,33 +47,37 @@ public class RegisterActivity extends Activity {
                 String password =  mPassword.getText().toString().trim();
 
                 if (checkInputs(email,password)) {
-
-                    HashMap<String, String> userInfo = new HashMap<String, String>();
-                    userInfo.put("email", email);
-                    userInfo.put("name",name);
-                    userInfo.put("password", password);
-                    userInfo.put("gcmId", "Test");
-
-                    JSONObject json = new JSONObject(userInfo);
-                    JsonObjectRequest request = new JsonObjectRequest
-                            (Request.Method.POST, createUserURL, json, new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    Log.d("TESTING", "response: " + response.toString());
-                                    Toast.makeText(RegisterActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                                    Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
-                                    startActivity(goLoginScreen);
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.d("TESTING", "error: " + error.getMessage());
-                                    Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
-
-                                }
-                            });
-                    RequestQueueSingleton.getInstance(mContext).addToRequestQueue(request);
+                    registerGcmAndCreate(email, name, password);
                 }
+            }
+        });
+    }
+
+    private void registerGcmAndCreate(final String email, final String name, final String password){
+        GCMUtil gcmUtil = new GCMUtil(this);
+        String gcmId = gcmUtil.getRegistrationId();
+        if (gcmId.equals("")) {
+            Log.d("TESTING", "no GCM");
+        }
+        gcmUtil.registerInBackground(new GCMUtil.GCMRegistrationListener() {
+            @Override
+            public void onRegistrationComplete(String gcmId) {
+                UserApi.create(email, name, password, gcmId, getApplicationContext(), new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        Log.d("TESTING", "response: " + response.toString());
+                        Toast.makeText(RegisterActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                        Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
+                        startActivity(goLoginScreen);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("TESTING", "error: " + error.getMessage());
+                        Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
     }

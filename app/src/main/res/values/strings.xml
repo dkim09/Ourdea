@@ -35,7 +35,7 @@
     </string-array>
 
     <string name="title_activity_meeting">Meetings</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_login">Ourdea</string>
+    <string name="title_activity_register">Register</string>
 
 </resources>
