@@ -37,5 +37,6 @@
     <string name="title_activity_meeting">Meetings</string>
     <string name="title_activity_login">Ourdea</string>
     <string name="title_activity_register">Register</string>
+    <string name="title_activity_project">ProjectActivity</string>
 
 </resources>

@@ -56,16 +56,14 @@ public class ProjectApi {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void join(final String projectId, final String name, final String password, final String userId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void join(final String projectId, final String password, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
-            params.put("name", name);
             params.put("password", password);
-            params.put("userId", userId);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/task/" + projectId, params, successResponse, errorResponse) {
+                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
@@ -87,7 +85,7 @@ public class ProjectApi {
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/task/" + projectId, params, successResponse, errorResponse) {
+                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
@@ -108,7 +106,7 @@ public class ProjectApi {
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/task/" + projectId, params, successResponse, errorResponse) {
+                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
@@ -123,7 +121,7 @@ public class ProjectApi {
 
     public static void delete(final String projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.DELETE, ApiUtilities.SERVER_ADDRESS + "/task/" + projectId, null, successResponse, errorResponse) {
+                (Request.Method.DELETE, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, null, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
