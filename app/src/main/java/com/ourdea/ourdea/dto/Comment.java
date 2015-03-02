@@ -15,6 +15,7 @@ public class Comment {
     private int mCommentId;
     private int mProjectId;
     private boolean mIsMyComment;
+    private String mName;
     private String mContent;
     private String mTime;
     private Boolean mIsLoading;
@@ -23,10 +24,11 @@ public class Comment {
 
     }
 
-    public Comment (int projectId, int commentId, boolean isMyComment, String content, int minutesAgo){
+    public Comment (int projectId, int commentId, boolean isMyComment, String name, String content, int minutesAgo){
         mProjectId = projectId;
         mCommentId = commentId;
         mIsMyComment = isMyComment;
+        mName = name;
         mContent = content;
         mTime = getTimeFromMinutesAgo(minutesAgo);
         mIsLoading = false;
@@ -36,6 +38,7 @@ public class Comment {
         setCommentId(jsonObject.getInt(context.getString(R.string.PROPERTY_COMMENT_ID)));
         setProjectId(jsonObject.getInt(context.getString(R.string.PROPERTY_PROJECT_ID)));
         setMyComment(jsonObject.getBoolean(context.getString(R.string.PROPERTY_COMMENT_MINE)));
+        setName(jsonObject.getString(context.getString(R.string.PROPERTY_USER_NAME)));
         setContent(jsonObject.getString(context.getString(R.string.PROPERTY_COMMENT_CONTENT)));
         if (jsonObject.has(context.getString(R.string.PROPERTY_COMMENT_MINUTES_AGO))){
             setTime(getTimeFromMinutesAgo(jsonObject.getInt(context.getString(R.string.PROPERTY_COMMENT_MINUTES_AGO))));
@@ -101,5 +104,13 @@ public class Comment {
 
     public void setIsLoading(Boolean isLoading) {
         mIsLoading = isLoading;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        mName = name;
     }
 }

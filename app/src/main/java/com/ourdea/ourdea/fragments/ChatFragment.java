@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,15 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.adapters.ChatAdapter;
+import com.ourdea.ourdea.api.ProjectApi;
 import com.ourdea.ourdea.dto.Comment;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -29,6 +36,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
 
     private ChatAdapter mAdapterChat;
     private String mEmail;
+    private String mName;
     private int mProjectId;
     private int mLeftBubble;
     private int mRightBubble;
@@ -37,13 +45,15 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     private BroadcastReceiver chatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d("TESTING", "GOT CHAT MESSAGE: " + intent.toString());
             String type = intent.getStringExtra(getString(R.string.PROPERTY_TYPE));
             if (type != null && type.equals(getString(R.string.PROPERTY_CHAT)) &&
                     mProjectId == Integer.parseInt(intent.getStringExtra(getString(R.string.PROPERTY_PROJECT_ID)))){
                 if (!mEmail.equals(intent.getStringExtra(getString(R.string.PROPERTY_EMAIL)))) {
                     int commentId = Integer.parseInt(intent.getStringExtra(getString(R.string.PROPERTY_COMMENT_ID)));
                     String content = intent.getStringExtra(getString(R.string.PROPERTY_COMMENT_CONTENT));
-                    Comment newComment = new Comment (mProjectId, commentId, false, content, 0);
+                    String name = intent.getStringExtra(getString(R.string.PROPERTY_USER_NAME));
+                    Comment newComment = new Comment (mProjectId, commentId, false, name, content, 0);
                     addNewCommentToChat (newComment);
                 }
                 abortBroadcast();
@@ -84,76 +94,62 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         if (v.equals(btn_send)){
             String content = txt_comment.getText().toString();
             if (content.trim().length() > 0){
-                Comment newComment = new Comment(mProjectId, 0, true, txt_comment.getText().toString(), 0);
+                Comment newComment = new Comment(mProjectId, 0, true, mName, txt_comment.getText().toString(), 0);
                 sendComment(newComment);
                 txt_comment.setText("");
             }
         }
     }
 
-    public void initializeChat (int projectId, String email){
+    public void initializeChat (int projectId, String email, String name){
         mProjectId = projectId;
         mEmail = email;
+        mName = name;
         mLeftBubble = R.drawable.img_chat_left;
         mRightBubble = R.drawable.img_chat_right;
     }
 
     private void loadChat (){
-//        Map<String, String> params = new HashMap<String, String>();
-//        params.put(mContext.getString(R.string.PROPERTY_FB_ID), mFbId);
-//        params.put(mContext.getString(R.string.PROPERTY_CHAT_ID), "" + mChatId);
-//        params.put(mContext.getString(R.string.PROPERTY_CHAT_LOAD_ALL), "" + (mLoadAll? 1 : 0));
-//        JsonObjectParamsRequest jsObjRequest = new JsonObjectParamsRequest
-//                (com.android.volley.Request.Method.POST, getString(R.string.server_chat), params, new com.android.volley.Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        if (isAdded()){
-//                            try {
-//                                if (!response.has(mContext.getString(R.string.PROPERTY_ERROR)) &&
-//                                        response.getInt(mContext.getString(R.string.PROPERTY_COUNT)) > 0){
-//                                    mComments.clear();
-//                                    JSONArray feed = response.getJSONArray(mContext.getString(R.string.PROPERTY_CHAT));
-//                                    int length = feed.length();
-//                                    for (int i = 0; i < length; i++){
-//                                        Comment newComment = new Comment (mContext, feed.getJSONObject(i));
-//                                        mComments.add(0, newComment);
-//                                    }
-//                                    mAdapterComment.notifyDataSetChanged();
-//                                    scrollToBottom(mScrollToBottom);
-//                                    txt_comment.setEnabled(true);
-//                                    btn_retry.setVisibility(View.INVISIBLE);
-//                                    Log.d("TESTING", "Subscribed to chat");
-//                                } else if (!response.has(mContext.getString(R.string.PROPERTY_ERROR))){
-//                                    Log.d("TESTING", "Nothing to load " + response.toString());
-//                                    txt_comment.setEnabled(true);
-//                                    btn_retry.setVisibility(View.INVISIBLE);
-//                                } else {
-//                                    Log.d("TESTING", "There was an error " + response.toString());
-//                                }
-//                            } catch (JSONException e) {
-//                                // Server returned garbage data
-//                                showToast(getString(R.string.error_server_down));
-//                                txt_comment.setEnabled(false);
-//                                btn_retry.setVisibility(View.VISIBLE);
-//                            }
-//                        }
-//                    }
-//                }, new com.android.volley.Response.ErrorListener() {
-//
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        if (isAdded()){
-//                            showToast(getString(R.string.error_no_internet));
-//                            error.printStackTrace();
-//                            txt_comment.setEnabled(false);
-//                            btn_retry.setVisibility(View.VISIBLE);
-//                        }
-//                    }
-//                });
-//        RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsObjRequest);
+        ProjectApi.getChat(mProjectId, this.getActivity(), new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    mComments.clear();
+                    int length = response.length();
+                    for (int i = 0; i < length; i++){
+                        Comment newComment = new Comment (mContext, response.getJSONObject(i));
+                        mComments.add(newComment);
+                    }
+                    mAdapterChat.notifyDataSetChanged();
+                    txt_comment.setEnabled(true);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("TESTING", "error: " + error.getMessage());
+            }
+        });
     }
 
     private void sendComment (final Comment comment){
+        mComments.add(comment);
+        mAdapterChat.notifyDataSetChanged();
+        ProjectApi.comment(mProjectId, comment.getContent(), this.getActivity(), new Response.Listener() {
+            @Override
+            public void onResponse(Object response) {
+                Log.d("TESTING", "response from server: " + response.toString());
+                comment.setIsLoading(false);
+                mAdapterChat.notifyDataSetChanged();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
 //        Map<String, String> params = new HashMap<String, String>();
 //        params.put(mContext.getString(R.string.PROPERTY_CHAT_ID), "" + mChatId);
 //        params.put(mContext.getString(R.string.PROPERTY_CHAT_TYPE), "" + mChatType);
@@ -220,29 +216,6 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         mAdapterChat.notifyDataSetChanged();
     }
 
-    private void unsubscribeChat (){
-        if (isAdded()) {
-//            Map<String, String> params = new HashMap<String, String>();
-//            params.put(mContext.getString(R.string.PROPERTY_FB_ID), mFbId);
-//            params.put(mContext.getString(R.string.PROPERTY_CHAT_ID), "" + mChatId);
-//            JsonObjectParamsRequest jsObjRequest = new JsonObjectParamsRequest
-//                    (com.android.volley.Request.Method.POST, getString(R.string.server_unsubscribe), params, new com.android.volley.Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            Log.d("TESTING", "Unsubscribed from chat");
-//                        }
-//                    }, new com.android.volley.Response.ErrorListener() {
-//
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            unsubscribeChat();
-//                            error.printStackTrace();
-//                        }
-//                    });
-//            RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsObjRequest);
-        }
-    }
-
     private void showToast (String message){
         Toast toast;
         toast = Toast.makeText(mContext, message, Toast.LENGTH_LONG);
@@ -253,7 +226,6 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     @Override
     public void onPause() {
         if (isAdded()){
-            unsubscribeChat();
             mContext.unregisterReceiver(chatReceiver);
         }
         super.onPause();

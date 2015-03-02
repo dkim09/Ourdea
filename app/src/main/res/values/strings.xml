@@ -15,6 +15,7 @@
     <string name="title_activity_edit_task">Edit Task</string>
     <string name="title_activity_chat">Chat</string>
     <string name="PROPERTY_NAME">OURDEA_PROPERTY</string>
+    <string name="PROPERTY_USER_NAME">name</string>
     <string name="PROPERTY_EMAIL">email</string>
     <string name="PROPERTY_GCM_ID">gcmId</string>
     <string name="PROPERTY_GCM_NOTIFICATION_ID">gcmId</string>

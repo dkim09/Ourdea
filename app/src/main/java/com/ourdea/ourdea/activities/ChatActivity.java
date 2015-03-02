@@ -11,6 +11,7 @@ public class ChatActivity extends FragmentActivity {
 
     private ChatFragment fragment_chat;
     private String mEmail;
+    private String mName;
     private int mProjectId;
 
     @Override
@@ -21,8 +22,9 @@ public class ChatActivity extends FragmentActivity {
         Intent givenIntent = getIntent();
         mEmail = givenIntent.getStringExtra(getString(R.string.PROPERTY_EMAIL));
         mProjectId = givenIntent.getIntExtra(getString(R.string.PROPERTY_PROJECT_ID), 0);
-
+        mName = givenIntent.getStringExtra(getString(R.string.PROPERTY_USER_NAME));
+        mProjectId = 1;
         fragment_chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
-        fragment_chat.initializeChat(mProjectId, mEmail);
+        fragment_chat.initializeChat(mProjectId, mEmail, mName);
     }
 }
