@@ -87,6 +87,10 @@
             android:name=".activities.ProjectActivity"
             android:label="@string/title_activity_project" >
         </activity>
+        <activity
+            android:name=".activities.AddProjectActivity"
+            android:label="@string/title_activity_create_project" >
+        </activity>
     </application>
 
 </manifest>

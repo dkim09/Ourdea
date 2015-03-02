@@ -154,13 +154,13 @@ public class AddEditTaskActivity extends Activity {
                 if (taskId == null) {
                     TaskApi.create(nameValue, descriptionValue, labelValue, assigneeValue, context,
                             new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                    Log.d("SERVER_SUCCESS", "Task created");
-                                }
-                            },
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
+                            finish();
+                            Log.d("SERVER_SUCCESS", "Task created");
+                        }
+                    },
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {

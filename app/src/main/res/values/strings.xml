@@ -38,5 +38,8 @@
     <string name="title_activity_login">Ourdea</string>
     <string name="title_activity_register">Register</string>
     <string name="title_activity_project">ProjectActivity</string>
+    <string name="title_join_project">Join Project</string>
+    <string name="title_activity_create_project">CreateProjectActivity</string>
+    <string name="title_project_details">Project Details</string>
 
 </resources>

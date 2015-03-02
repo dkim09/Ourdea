@@ -34,12 +34,11 @@ public class ProjectApi {
     }
 
 
-    public static void create(final String name, final String password, final List<String> members, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void create(final String name, final String password, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("name", name);
             params.put("password", password);
-            params.put("members", members);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -63,7 +62,7 @@ public class ProjectApi {
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PATCH, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, params, successResponse, errorResponse) {
+                (Request.Method.POST , ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
