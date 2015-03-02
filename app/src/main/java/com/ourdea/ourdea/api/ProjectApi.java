@@ -134,4 +134,38 @@ public class ProjectApi {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+    public static void getChat (int projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (ApiUtilities.SERVER_ADDRESS + "/project/"+projectId+"/chat", successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
+    }
+
+    public static void comment (int projectId, String content, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("content", content);
+        } catch (Exception exception) { }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/project/"+projectId+"/comment", params, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
 }

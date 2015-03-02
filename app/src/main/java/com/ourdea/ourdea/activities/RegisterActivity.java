@@ -21,7 +21,6 @@ import com.ourdea.ourdea.gcm.GCMUtil;
 
 public class RegisterActivity extends Activity {
 
-    String createUserURL = "http://318af125.ngrok.com/user";
     protected EditText mUsername;
     protected EditText mEmail;
     protected EditText mPassword;
