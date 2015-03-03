@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,9 +25,9 @@ public class ChatAdapter extends BaseAdapter {
 
     class ViewHolder {
         LinearLayout layout_comment;
+        TextView txt_name;
         TextView txt_comment;
         TextView txt_time;
-        ImageButton btn_icon;
         ProgressBar prg_loading;
     }
 
@@ -65,9 +64,9 @@ public class ChatAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.item_comment, null);
 
             viewHolder.layout_comment = (LinearLayout) convertView.findViewById(R.id.layout_comment);
+            viewHolder.txt_name = (TextView) convertView.findViewById(R.id.txt_name);
             viewHolder.txt_comment = (TextView) convertView.findViewById(R.id.txt_comment);
             viewHolder.txt_time = (TextView) convertView.findViewById(R.id.txt_time);
-            viewHolder.btn_icon = (ImageButton) convertView.findViewById(R.id.btn_icon);
             viewHolder.prg_loading = (ProgressBar) convertView.findViewById(R.id.prg_loading);
 
             convertView.setTag(viewHolder);
@@ -89,16 +88,16 @@ public class ChatAdapter extends BaseAdapter {
 //        }
 //        viewHolder.btn_icon.setImageDrawable(mDrawable);
         if (comment.isMyComment()){
+            viewHolder.txt_name.setText("");
             viewHolder.txt_comment.setBackgroundResource(mRightBubble);
             viewHolder.layout_comment.setGravity(Gravity.RIGHT);
             viewHolder.layout_comment.addView(viewHolder.prg_loading);
             viewHolder.layout_comment.addView(viewHolder.txt_time);
             viewHolder.layout_comment.addView(viewHolder.txt_comment);
-            viewHolder.layout_comment.addView(viewHolder.btn_icon);
         } else {
+            viewHolder.txt_name.setText(comment.getName());
             viewHolder.txt_comment.setBackgroundResource(mLeftBubble);
             viewHolder.layout_comment.setGravity(Gravity.LEFT);
-            viewHolder.layout_comment.addView(viewHolder.btn_icon);
             viewHolder.layout_comment.addView(viewHolder.txt_comment);
             viewHolder.layout_comment.addView(viewHolder.txt_time);
             viewHolder.layout_comment.addView(viewHolder.prg_loading);

@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 
 public class ApiUtilities {
 
-    final static public String SERVER_ADDRESS = "http://3859c009.ngrok.com"; // Roman PC Server
-    //final static public String SERVER_ADDRESS = "http://192.168.0.10:9000"; // Daniel PC server
+    //final static public String SERVER_ADDRESS = "http://3859c009.ngrok.com"; // Roman PC Server
+    final static public String SERVER_ADDRESS = "http://192.168.0.10:9000"; // Daniel PC server
 
     public static class Session {
 

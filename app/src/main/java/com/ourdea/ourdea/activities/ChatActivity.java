@@ -1,6 +1,8 @@
 package com.ourdea.ourdea.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -20,9 +22,10 @@ public class ChatActivity extends FragmentActivity {
         setContentView(R.layout.activity_chat);
 
         Intent givenIntent = getIntent();
-        mEmail = givenIntent.getStringExtra(getString(R.string.PROPERTY_EMAIL));
         mProjectId = givenIntent.getIntExtra(getString(R.string.PROPERTY_PROJECT_ID), 0);
-        mName = givenIntent.getStringExtra(getString(R.string.PROPERTY_USER_NAME));
+        SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
+        mEmail = prefs.getString(getString(R.string.PROPERTY_EMAIL), "");
+        mName = prefs.getString(getString(R.string.PROPERTY_USER_NAME), "");
         mProjectId = 1;
         fragment_chat = (ChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_chat);
         fragment_chat.initializeChat(mProjectId, mEmail, mName);

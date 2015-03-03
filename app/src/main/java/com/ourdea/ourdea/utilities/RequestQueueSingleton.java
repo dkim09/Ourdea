@@ -2,8 +2,10 @@ package com.ourdea.ourdea.utilities;
 
 import android.content.Context;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.RetryPolicy;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
 
@@ -12,10 +14,15 @@ public class RequestQueueSingleton {
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
     private static Context mContext;
+    private RetryPolicy mRetryPolicy;
 
     private RequestQueueSingleton(Context context){
         mContext = context;
         mRequestQueue = getRequestQueue();
+        mRetryPolicy = new DefaultRetryPolicy(
+                0,
+                0,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
     }
 
     public static synchronized RequestQueueSingleton getInstance(Context context) {
@@ -35,6 +42,7 @@ public class RequestQueueSingleton {
     }
 
     public <T> void addToRequestQueue(Request<T> req) {
+        req.setRetryPolicy(mRetryPolicy);
         getRequestQueue().add(req);
     }
 }
