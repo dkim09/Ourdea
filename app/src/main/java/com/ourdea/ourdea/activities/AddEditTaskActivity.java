@@ -1,7 +1,9 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.api.ApiUtilities;
 import com.ourdea.ourdea.api.LabelApi;
+import com.ourdea.ourdea.api.TagApi;
 import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.api.UserApi;
 import com.ourdea.ourdea.dto.LabelDto;
@@ -33,6 +36,8 @@ import java.util.ArrayList;
 public class AddEditTaskActivity extends Activity {
 
     private String taskId;
+
+    private ArrayList<String> users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,7 @@ public class AddEditTaskActivity extends Activity {
                        public void onResponse(JSONArray response) {
                            Log.d("SERVER_SUCCESS", "Retrieved users");
 
-                           ArrayList<String> users = new ArrayList<>();
+                           users = new ArrayList<>();
                            for (int i = 0; i < response.length(); i++) {
                                try {
                                    users.add(response.getJSONObject(i).getString("email"));
@@ -198,6 +203,7 @@ public class AddEditTaskActivity extends Activity {
             menu.findItem(R.id.action_delete_task).setVisible(true);
             menu.findItem(R.id.action_done_task).setVisible(true);
             menu.findItem(R.id.action_in_progress_task).setVisible(true);
+            menu.findItem(R.id.action_tag).setVisible(true);
         }
 
         return true;
@@ -256,6 +262,42 @@ public class AddEditTaskActivity extends Activity {
                         Log.d("SERVER_ERROR", "Task cannot be marked as inprogress");
                     }
                 });
+        } else if (id == R.id.action_tag) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Tag user for attention");
+
+            final View dialogView = View.inflate(this, R.layout.dialog_tag_user, null);
+            final AutoCompleteTextView userAutoFill = (AutoCompleteTextView) dialogView.findViewById(R.id.user_autofill);
+            final EditText message = (EditText) dialogView.findViewById(R.id.message);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
+            userAutoFill.setAdapter(adapter);
+            builder.setView(dialogView);
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.setPositiveButton("Tag", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    TagApi.tag(userAutoFill.getText().toString(), Long.parseLong(taskId), message.getText().toString(), getApplicationContext(),
+                        new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                Toast.makeText(getApplicationContext(), "User tagged", Toast.LENGTH_SHORT).show();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getApplicationContext(), "Could not tag user", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                }
+            });
+
+            builder.show();
         }
 
         return super.onOptionsItemSelected(item);

@@ -101,8 +101,9 @@ public class GCMIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-        .setSmallIcon(R.drawable.ic_launcher)
+        .setSmallIcon(R.drawable.ic_action_assign_to_me)
         .setContentTitle(title)
+        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
         .setContentText(message)
         .setDefaults(Notification.FLAG_AUTO_CANCEL | Notification.DEFAULT_SOUND | Notification.DEFAULT_VIBRATE)
         .setAutoCancel(true);
