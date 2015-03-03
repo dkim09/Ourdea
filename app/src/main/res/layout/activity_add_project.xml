@@ -9,7 +9,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/project_name"
+        android:id="@+id/create_project_name"
         android:textColor="@android:color/black"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -21,9 +21,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:id="@+id/project_password"
+        android:id="@+id/create_project_password"
         android:textColor="@android:color/black"
-        android:layout_below="@+id/project_name"
+        android:layout_below="@+id/create_project_name"
         android:hint="Project Password"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
@@ -36,9 +36,9 @@
         android:layout_height="wrap_content"
         android:text="Create"
         android:id="@+id/create_project"
-        android:layout_below="@+id/project_password"
+        android:layout_below="@+id/create_project_password"
         android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/project_password" />
+        android:layout_alignEnd="@+id/create_project_password" />
 
 
 </RelativeLayout>

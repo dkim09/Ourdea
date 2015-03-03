@@ -27,8 +27,8 @@ public class AddProjectActivity extends Activity {
 
         final Context context = this;
 
-        final EditText projectName = (EditText) findViewById(R.id.project_name);
-        final EditText projectPass = (EditText) findViewById(R.id.project_password);
+        final EditText projectName = (EditText) findViewById(R.id.create_project_name);
+        final EditText projectPass = (EditText) findViewById(R.id.create_project_password);
         final Button createProjectButton = (Button) findViewById(R.id.create_project);
 
         createProjectButton.setOnClickListener(new View.OnClickListener() {
