@@ -1,7 +1,9 @@
 package com.ourdea.ourdea.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,18 +14,20 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.activities.AddEditTaskActivity;
+import com.ourdea.ourdea.activities.TaskActivity;
 import com.ourdea.ourdea.adapters.TaskListAdapter;
 import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.dto.TaskDto;
 
 import org.json.JSONArray;
 
-public class TaskListFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class TaskListFragment extends Fragment implements AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private static final String ARG_SECTION = "section";
 
@@ -96,7 +100,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
     public void onResume() {
         super.onResume();
         loadTasks();
-        if (taskListContent != null) buildTaskList();
+        //Log.d("SER", "RESUMING");
+        //if (taskListContent != null) buildTaskList();
     }
 
     private void buildTaskList() {
@@ -115,6 +120,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
 
         return view;
     }
@@ -160,6 +166,114 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         if (emptyView instanceof TextView) {
             ((TextView) emptyView).setText(emptyText);
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+
+        String [] options = new String[] {"Delete"};
+
+        final TaskDto taskDto = mAdapter.getItem(position);
+        final String taskStatus = taskDto.getStatus();
+
+        switch (taskStatus) {
+            case "todo":
+                options = new String[] {"In Progress", "Done", "Delete"};
+                break;
+            case "completed":
+                options = new String[] {"In Progress", "To Do", "Delete"};
+                break;
+            case "inprogress":
+                options = new String[] {"Done", "To Do", "Delete"};
+                break;
+        }
+
+        dialogBuilder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final TaskActivity taskActivity = (TaskActivity) getActivity();
+                switch (which) {
+                    case 0:
+                        if (taskStatus.equals("completed") || taskStatus.equals("todo")) {
+                            TaskApi.updateStatus(taskDto.getId(), "inprogress", getActivity(), new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+                                    Toast.makeText(getActivity(), "Task in progress", Toast.LENGTH_SHORT).show();
+                                    taskActivity.getViewPager().setCurrentItem(2);
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getActivity(), "Task could not be moved to in progress", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else if (taskStatus.equals("inprogress")) {
+                            TaskApi.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+                                    taskActivity.getViewPager().setCurrentItem(3);
+                                    Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getActivity(), "Task could not be moved to completed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        break;
+                    case 1:
+                        if (taskStatus.equals("completed") || taskStatus.equals("inprogress")) {
+                            TaskApi.updateStatus(taskDto.getId(), "todo", getActivity(), new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+                                    Toast.makeText(getActivity(), "Task marked to do", Toast.LENGTH_SHORT).show();
+                                    taskActivity.getViewPager().setCurrentItem(1);
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getActivity(), "Task could not be moved to 'to do'", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else if (taskStatus.equals("todo")) {
+                            TaskApi.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+                                    Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
+                                    taskActivity.getViewPager().setCurrentItem(3);
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getActivity(), "Task could not be moved to completed", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                        break;
+                    case 2:
+                        TaskApi.delete(taskDto.getId(), getActivity(), new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                Toast.makeText(getActivity(), "Task deleted", Toast.LENGTH_SHORT).show();
+                                loadTasks();
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(getActivity(), "Task could not be deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        break;
+                }
+            }
+        });
+
+        dialogBuilder.show();
+
+        return true;
     }
 
     /**

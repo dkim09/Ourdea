@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class ApiUtilities {
 
-    final static public String SERVER_ADDRESS = "http://52.10.50.18:9000"; // AWS server
+    final static public String SERVER_ADDRESS = "http://318af125.ngrok.com"; // AWS server
 
     public static class Session {
 

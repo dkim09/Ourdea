@@ -63,6 +63,10 @@ public class TaskActivity extends DrawerActivity implements ActionBar.TabListene
         }
     }
 
+    public ViewPager getViewPager() {
+        return mViewPager;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.

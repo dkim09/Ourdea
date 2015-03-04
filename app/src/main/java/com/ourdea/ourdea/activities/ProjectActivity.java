@@ -33,15 +33,16 @@ public class ProjectActivity extends Activity {
         final Button joinProjectButton = (Button) findViewById(R.id.join_project);
 
         joinProjectButton.setOnClickListener(new View.OnClickListener() {
-            final String idValue = projectId.getText().toString();
-            final String passValue = projectPass.getText().toString();
             @Override
             public void onClick(View v) {
+                    final String idValue = projectId.getText().toString();
+                    final String passValue = projectPass.getText().toString();
+
                     ProjectApi.join(idValue, passValue, context,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
-                             Toast.makeText(ProjectActivity.this, "Project Joined", Toast.LENGTH_SHORT).show();
+                             Toast.makeText(ProjectActivity.this, "Joined project", Toast.LENGTH_SHORT).show();
                              finish();
                              Log.d("SERVER_SUCCESS", "Project Joined");
                                 }
@@ -49,6 +50,7 @@ public class ProjectActivity extends Activity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(), "Could not join project - are you already part of it?", Toast.LENGTH_SHORT).show();
                                     Log.d("SERVER_ERROR", "Project could not be found");
                                 }
                             });

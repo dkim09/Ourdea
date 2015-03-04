@@ -9,14 +9,16 @@ public class TaskDto {
     private Object dueDate;
     private String id;
     private String name;
+    private String status;
 
-    public TaskDto(String id, String name, String description, String assignedTo, String label, String dueDate) {
+    public TaskDto(String id, String name, String description, String assignedTo, String label, String dueDate, String status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.assignedTo = assignedTo;
         this.label = label;
         this.dueDate = dueDate;
+        this.status = status;
     }
 
     public TaskDto(JSONObject jsonObject) {
@@ -27,6 +29,7 @@ public class TaskDto {
             this.assignedTo = jsonObject.getJSONObject("assignedTo").getString("email");
             this.label = jsonObject.getJSONObject("label").getString("name");
             this.dueDate = jsonObject.get("dueDate");
+            this.status = jsonObject.getString("status");
         } catch (Exception exception) {
 
         }
@@ -58,6 +61,10 @@ public class TaskDto {
 
     public String getName() {
         return name;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
 }

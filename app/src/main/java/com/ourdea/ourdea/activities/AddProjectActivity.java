@@ -1,7 +1,9 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,15 +34,27 @@ public class AddProjectActivity extends Activity {
         final Button createProjectButton = (Button) findViewById(R.id.create_project);
 
         createProjectButton.setOnClickListener(new View.OnClickListener() {
-            final String nameValue = projectName.getText().toString();
-            final String passValue = projectPass.getText().toString();
             @Override
             public void onClick(View v) {
+                final String nameValue = projectName.getText().toString();
+                final String passValue = projectPass.getText().toString();
+
                 ProjectApi.create(nameValue, passValue, context,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                Toast.makeText(AddProjectActivity.this, "Project Created", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(AddProjectActivity.this, "Project created", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext());
+                                alertDialogBuilder.setTitle("Project created");
+                                try {
+                                    alertDialogBuilder.setMessage("Save this information somewhere and share it with others to let them join your project:\nProject ID: " + response.getString("projectId") + "\nPassword: " + response.getString("password"));
+                                    alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).show();
+                                } catch (Exception e) {}
                                 finish();
                                 Log.d("SERVER_SUCCESS", "Project Created");
                             }
@@ -48,6 +62,7 @@ public class AddProjectActivity extends Activity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                Toast.makeText(AddProjectActivity.this, "Project could not be created", Toast.LENGTH_SHORT).show();
                                 Log.d("SERVER_ERROR", "Project could not be created");
                             }
                         });

@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
                                 editor.putString(getString(R.string.PROPERTY_EMAIL), email);
                                 editor.putString(getString(R.string.PROPERTY_USER_NAME), name);
                                 editor.apply();
-                                Intent goMainScreen = new Intent(LoginActivity.this, DashboardActivity.class);
+                                Intent goMainScreen = new Intent(LoginActivity.this, ProjectActivity.class);
                                 startActivity(goMainScreen);
                             } catch (JSONException e) {
                                 e.printStackTrace();
