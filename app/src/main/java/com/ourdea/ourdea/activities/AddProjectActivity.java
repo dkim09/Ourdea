@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -43,8 +44,8 @@ public class AddProjectActivity extends Activity {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
-                                //Toast.makeText(AddProjectActivity.this, "Project created", Toast.LENGTH_SHORT).show();
-                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getApplicationContext());
+                                Toast.makeText(AddProjectActivity.this, "Project created", Toast.LENGTH_SHORT).show();
+                                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddProjectActivity.this);
                                 alertDialogBuilder.setTitle("Project created");
                                 try {
                                     alertDialogBuilder.setMessage("Save this information somewhere and share it with others to let them join your project:\nProject ID: " + response.getString("projectId") + "\nPassword: " + response.getString("password"));
@@ -52,10 +53,13 @@ public class AddProjectActivity extends Activity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                            Intent goMainScreen = new Intent(AddProjectActivity.this, DashboardActivity.class);
+                                            startActivity(goMainScreen);
                                         }
                                     }).show();
-                                } catch (Exception e) {}
-                                finish();
+                                } catch (Exception e) {
+                                    Log.d("SERVER_ERROR", "can't parse project");
+                                }
                                 Log.d("SERVER_SUCCESS", "Project Created");
                             }
                         },
