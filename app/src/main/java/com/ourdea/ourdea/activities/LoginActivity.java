@@ -3,6 +3,7 @@ package com.ourdea.ourdea.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -16,6 +17,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.api.UserApi;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 
 public class LoginActivity extends Activity {
@@ -49,16 +53,27 @@ public class LoginActivity extends Activity {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = mEmail.getText().toString().trim();
+                final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
                 UserApi.login(email, password, getApplicationContext(),
-                    new Response.Listener() {
+                    new Response.Listener<JSONObject>() {
                         @Override
-                        public void onResponse(Object response) {
-                            Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                            Intent goMainScreen = new Intent(LoginActivity.this, DashboardActivity.class);
-                            startActivity(goMainScreen);
+                        public void onResponse(JSONObject response) {
+                            try {
+                                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                                String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
+                                Log.d("TESTING", "name: " + name);
+                                SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(getString(R.string.PROPERTY_EMAIL), email);
+                                editor.putString(getString(R.string.PROPERTY_USER_NAME), name);
+                                editor.apply();
+                                Intent goMainScreen = new Intent(LoginActivity.this, DashboardActivity.class);
+                                startActivity(goMainScreen);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     },
                     new Response.ErrorListener() {

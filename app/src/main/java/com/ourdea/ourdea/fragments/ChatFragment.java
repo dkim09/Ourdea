@@ -33,6 +33,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     private Context mContext;
     private EditText txt_comment;
     private ImageButton btn_send;
+    private ListView mList;
 
     private ChatAdapter mAdapterChat;
     private String mEmail;
@@ -45,7 +46,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     private BroadcastReceiver chatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("TESTING", "GOT CHAT MESSAGE: " + intent.toString());
+            Log.d("TESTING", "GOT CHAT MESSAGE: " + intent.getStringExtra(getString(R.string.PROPERTY_EMAIL)));
             String type = intent.getStringExtra(getString(R.string.PROPERTY_TYPE));
             if (type != null && type.equals(getString(R.string.PROPERTY_CHAT)) &&
                     mProjectId == Integer.parseInt(intent.getStringExtra(getString(R.string.PROPERTY_PROJECT_ID)))){
@@ -81,7 +82,8 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         mComments = new ArrayList<Comment>();
         mAdapterChat = new ChatAdapter(mContext, mComments, mLeftBubble, mRightBubble);
         setListAdapter(mAdapterChat);
-
+        mList = getListView();
+        mList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
     }
 
     @Override
@@ -117,11 +119,18 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
                     mComments.clear();
                     int length = response.length();
                     for (int i = 0; i < length; i++){
-                        Comment newComment = new Comment (mContext, response.getJSONObject(i));
+                        Comment newComment = new Comment (mContext, mEmail, response.getJSONObject(i));
                         mComments.add(newComment);
                     }
                     mAdapterChat.notifyDataSetChanged();
                     txt_comment.setEnabled(true);
+                    mList.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            //mList.smoothScrollToPosition(mAdapterComment.getCount()-1);
+                            mList.setSelection(mAdapterChat.getCount());
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -135,6 +144,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     }
 
     private void sendComment (final Comment comment){
+        comment.setIsLoading(true);
         mComments.add(comment);
         mAdapterChat.notifyDataSetChanged();
         ProjectApi.comment(mProjectId, comment.getContent(), this.getActivity(), new Response.Listener() {
@@ -150,65 +160,6 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
 
             }
         });
-//        Map<String, String> params = new HashMap<String, String>();
-//        params.put(mContext.getString(R.string.PROPERTY_CHAT_ID), "" + mChatId);
-//        params.put(mContext.getString(R.string.PROPERTY_CHAT_TYPE), "" + mChatType);
-//        params.put(mContext.getString(R.string.PROPERTY_FB_ID), mFbId);
-//        params.put(mContext.getString(R.string.PROPERTY_COMMENT_OWNER), ""+comment.isOwnerComment());
-//        params.put(mContext.getString(R.string.PROPERTY_COMMENT_LETTER), ""+comment.getLetter());
-//        params.put(mContext.getString(R.string.PROPERTY_COMMENT_COLOR), ""+comment.getColor());
-//        params.put(mContext.getString(R.string.PROPERTY_COMMENT_CONTENT), comment.getContent());
-//        JsonObjectParamsRequest jsObjRequest = new JsonObjectParamsRequest
-//                (com.android.volley.Request.Method.POST, getString(R.string.server_comment), params, new com.android.volley.Response.Listener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        if (isAdded()){
-//                            try {
-//                                if (!response.has(mContext.getString(R.string.PROPERTY_ERROR))){
-//                                    int commentId = Integer.parseInt(response.getString(mContext.getString(R.string.PROPERTY_COMMENT_ID)));
-//                                    int letter = Integer.parseInt(response.getString(mContext.getString(R.string.PROPERTY_COMMENT_LETTER)));
-//                                    int color = Integer.parseInt(response.getString(mContext.getString(R.string.PROPERTY_COMMENT_COLOR)));
-//                                    if (mColor == -1 && mLetter == -1){ // if first comment, so waited to get assigned icon
-//                                        mLetter = letter;
-//                                        mColor = color;
-//                                        comment.setCommentId(commentId);
-//                                        comment.setLetter(letter);
-//                                        comment.setColor(color);
-//                                        comment.setIsLoading(false);
-//                                        addNewCommentToChat(comment);
-//                                    } else {
-//                                        mLetter = letter;
-//                                        mColor = color;
-//                                        comment.setCommentId(commentId);
-//                                        comment.setLetter(letter);
-//                                        comment.setColor(color);
-//                                        comment.setIsLoading(false);
-//                                        mAdapterComment.notifyDataSetChanged();
-//                                    }
-//                                    scrollToBottom (true);
-//                                } else {
-//                                    Log.d("TESTING", "Error posting comment");
-//                                }
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                                mComments.remove(comment);
-//                                mAdapterComment.notifyDataSetChanged();
-//                            }
-//                        }
-//                    }
-//                }, new com.android.volley.Response.ErrorListener() {
-//
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        if (isAdded()) {
-//                            showToast(getString(R.string.error_no_internet));
-//                            error.printStackTrace();
-//                            mComments.remove(comment);
-//                            mAdapterComment.notifyDataSetChanged();
-//                        }
-//                    }
-//                });
-//        RequestQueueSingleton.getInstance(mContext).addToRequestQueue(jsObjRequest);
     }
 
     private void addNewCommentToChat (Comment comment){

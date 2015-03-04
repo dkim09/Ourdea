@@ -24,8 +24,8 @@
     <string name="PROPERTY_PROJECT_ID">projectId</string>
     <string name="PROPERTY_COMMENT_ID">commentId</string>
     <string name="PROPERTY_COMMENT_MINE">commentMine</string>
-    <string name="PROPERTY_COMMENT_CONTENT">commentContent</string>
-    <string name="PROPERTY_COMMENT_MINUTES_AGO">minutesAgo</string>
+    <string name="PROPERTY_COMMENT_CONTENT">content</string>
+    <string name="PROPERTY_COMMENT_TIME">time</string>
 
     <string-array name="drawer_items">
         <item>Dashboard</item>
