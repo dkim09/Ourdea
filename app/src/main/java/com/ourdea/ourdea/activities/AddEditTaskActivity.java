@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -58,7 +57,6 @@ public class AddEditTaskActivity extends Activity {
         // Get references to UI elements
         final AutoCompleteTextView labelAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.label_autocomplete);
         final AutoCompleteTextView assigneeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.assignee);
-        final Button addTaskButton = (Button) findViewById(R.id.add_task);
         final EditText name = (EditText) findViewById(R.id.name);
         final EditText description = (EditText) findViewById(R.id.description);
 
@@ -146,51 +144,6 @@ public class AddEditTaskActivity extends Activity {
                         Log.d("SERVER_ERROR", "Cannot retrieve users");
                     }
                 });
-
-        // Set listener on save button
-        addTaskButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String nameValue = name.getText().toString();
-                final String descriptionValue = description.getText().toString();
-                final String labelValue = labelAutoCompleteTextView.getText().toString();
-                final String assigneeValue = assigneeAutoCompleteTextView.getText().toString();
-
-                if (taskId == null) {
-                    TaskResource.create(nameValue, descriptionValue, labelValue, assigneeValue, context,
-                            new Response.Listener<JSONObject>() {
-                                @Override
-                                public void onResponse(JSONObject response) {
-                                    Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                    Log.d("SERVER_SUCCESS", "Task created");
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.d("SERVER_ERROR", "Task could not be created");
-                                }
-                            });
-                } else {
-                    TaskResource.update(taskId, nameValue, descriptionValue, labelValue, assigneeValue, context,
-                            new Response.Listener() {
-                                @Override
-                                public void onResponse(Object response) {
-                                    finish();
-                                    Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
-                                    Log.d("SERVER_SUCCESS", "Task saved");
-                                }
-                            },
-                            new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.d("SERVER_ERROR", "Task could not be saved");
-                                }
-                            });
-                }
-            }
-        });
     }
 
 
@@ -204,6 +157,7 @@ public class AddEditTaskActivity extends Activity {
             menu.findItem(R.id.action_done_task).setVisible(true);
             menu.findItem(R.id.action_in_progress_task).setVisible(true);
             menu.findItem(R.id.action_tag).setVisible(true);
+            menu.findItem(R.id.action_save_task).setVisible(false);
         }
 
         return true;
@@ -298,6 +252,52 @@ public class AddEditTaskActivity extends Activity {
             });
 
             builder.show();
+        } else if (id == R.id.action_save_task) {
+            Context context = this;
+            // Get references to UI elements
+            final AutoCompleteTextView labelAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.label_autocomplete);
+            final AutoCompleteTextView assigneeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.assignee);
+            final EditText name = (EditText) findViewById(R.id.name);
+            final EditText description = (EditText) findViewById(R.id.description);
+
+            final String nameValue = name.getText().toString();
+            final String descriptionValue = description.getText().toString();
+            final String labelValue = labelAutoCompleteTextView.getText().toString();
+            final String assigneeValue = assigneeAutoCompleteTextView.getText().toString();
+
+            if (taskId == null) {
+                TaskResource.create(nameValue, descriptionValue, labelValue, assigneeValue, context,
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
+                                finish();
+                                Log.d("SERVER_SUCCESS", "Task created");
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("SERVER_ERROR", "Task could not be created");
+                            }
+                        });
+            } else {
+                TaskResource.update(taskId, nameValue, descriptionValue, labelValue, assigneeValue, context,
+                        new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                finish();
+                                Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
+                                Log.d("SERVER_SUCCESS", "Task saved");
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("SERVER_ERROR", "Task could not be saved");
+                            }
+                        });
+            }
         }
 
         return super.onOptionsItemSelected(item);
