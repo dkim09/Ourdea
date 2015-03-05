@@ -33,7 +33,7 @@ public class TaskApi {
 
     public static void getAll(String type, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (ApiUtilities.SERVER_ADDRESS + "/task/all/" + type, successResponse, errorResponse) {
+                (ApiUtilities.SERVER_ADDRESS + "/project/" + ApiUtilities.Session.getProjectId(context) + "/task/all/" + type, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
@@ -56,7 +56,7 @@ public class TaskApi {
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/task", params, successResponse, errorResponse) {
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/project/" + ApiUtilities.Session.getProjectId(context) + "/task", params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
