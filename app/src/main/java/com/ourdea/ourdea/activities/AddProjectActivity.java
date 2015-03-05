@@ -48,7 +48,7 @@ public class AddProjectActivity extends Activity {
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddProjectActivity.this);
                                 alertDialogBuilder.setTitle("Project created");
                                 try {
-                                    alertDialogBuilder.setMessage("Save this information somewhere and share it with others to let them join your project:\nProject ID: " + response.getString("projectId") + "\nPassword: " + response.getString("password"));
+                                    alertDialogBuilder.setMessage("Share this information with others to let them join your project:\n\nProject ID: " + response.getString("projectId") + "\nPassword: " + response.getString("password"));
                                     alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {

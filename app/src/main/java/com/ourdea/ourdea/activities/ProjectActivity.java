@@ -42,9 +42,10 @@ public class ProjectActivity extends Activity {
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
-                             Toast.makeText(ProjectActivity.this, "Joined project", Toast.LENGTH_SHORT).show();
-                             finish();
-                             Log.d("SERVER_SUCCESS", "Project Joined");
+                                    Toast.makeText(ProjectActivity.this, "Joined project", Toast.LENGTH_SHORT).show();
+                                    Log.d("SERVER_SUCCESS", "Joined project");
+                                    Intent goMainScreen = new Intent(ProjectActivity.this, DashboardActivity.class);
+                                    startActivity(goMainScreen);
                                 }
                             },
                             new Response.ErrorListener() {

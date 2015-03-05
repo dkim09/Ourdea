@@ -13,8 +13,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.util.List;
-
 
 public class ProjectApi {
 
@@ -62,7 +60,7 @@ public class ProjectApi {
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST , ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, params, successResponse, errorResponse) {
+                (Request.Method.POST , ApiUtilities.SERVER_ADDRESS + "/project/" + projectId + "/join", params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
