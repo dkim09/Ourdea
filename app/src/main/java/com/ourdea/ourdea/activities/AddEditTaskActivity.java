@@ -22,9 +22,9 @@ import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.api.ApiUtilities;
 import com.ourdea.ourdea.api.LabelApi;
+import com.ourdea.ourdea.api.ProjectApi;
 import com.ourdea.ourdea.api.TagApi;
 import com.ourdea.ourdea.api.TaskApi;
-import com.ourdea.ourdea.api.UserApi;
 import com.ourdea.ourdea.dto.LabelDto;
 import com.ourdea.ourdea.dto.TaskDto;
 
@@ -122,30 +122,30 @@ public class AddEditTaskActivity extends Activity {
                 });
 
         // Load users
-        UserApi.getAll(context,
-            new Response.Listener<JSONArray>() {
-                       @Override
-                       public void onResponse(JSONArray response) {
-                           Log.d("SERVER_SUCCESS", "Retrieved users");
+        ProjectApi.getMembers(ApiUtilities.Session.getProjectId(context), context,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.d("SERVER_SUCCESS", "Retrieved users");
 
-                           users = new ArrayList<>();
-                           for (int i = 0; i < response.length(); i++) {
-                               try {
-                                   users.add(response.getJSONObject(i).getString("email"));
-                               } catch (Exception exception) {
-                               }
-                           }
+                        users = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                users.add(response.getJSONObject(i).getString("email"));
+                            } catch (Exception exception) {
+                            }
+                        }
 
-                           ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, users);
-                           assigneeAutoCompleteTextView.setAdapter(adapter);
-                       }
-                   },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("SERVER_ERROR", "Cannot retrieve users");
-                }
-            });
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, users);
+                        assigneeAutoCompleteTextView.setAdapter(adapter);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("SERVER_ERROR", "Cannot retrieve users");
+                    }
+                });
 
         // Set listener on save button
         addTaskButton.setOnClickListener(new View.OnClickListener() {

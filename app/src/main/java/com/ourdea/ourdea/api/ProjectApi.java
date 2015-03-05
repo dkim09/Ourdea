@@ -16,6 +16,13 @@ import java.util.Map;
 
 public class ProjectApi {
 
+    public static void getMembers(Long projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (ApiUtilities.SERVER_ADDRESS + "/project/" + projectId + "/members", successResponse, errorResponse);
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
+    }
+
     public static void get(final String projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, null, successResponse, errorResponse) {
