@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.api.ApiUtilities;
 import com.ourdea.ourdea.api.ProjectApi;
 
 import org.json.JSONObject;
@@ -44,6 +45,9 @@ public class ProjectActivity extends Activity {
                                 public void onResponse(JSONObject response) {
                                     Toast.makeText(ProjectActivity.this, "Joined project", Toast.LENGTH_SHORT).show();
                                     Log.d("SERVER_SUCCESS", "Joined project");
+                                    try {
+                                        ApiUtilities.Session.storeProjectId(response.getLong("projectId"), getApplicationContext());
+                                    } catch (Exception exception) {}
                                     Intent goMainScreen = new Intent(ProjectActivity.this, DashboardActivity.class);
                                     startActivity(goMainScreen);
                                 }

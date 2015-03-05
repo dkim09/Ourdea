@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.api.ApiUtilities;
 import com.ourdea.ourdea.api.ProjectApi;
 
 import org.json.JSONObject;
@@ -43,7 +44,7 @@ public class AddProjectActivity extends Activity {
                 ProjectApi.create(nameValue, passValue, context,
                         new Response.Listener<JSONObject>() {
                             @Override
-                            public void onResponse(JSONObject response) {
+                            public void onResponse(final JSONObject response) {
                                 Toast.makeText(AddProjectActivity.this, "Project created", Toast.LENGTH_SHORT).show();
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddProjectActivity.this);
                                 alertDialogBuilder.setTitle("Project created");
@@ -53,6 +54,9 @@ public class AddProjectActivity extends Activity {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
                                             dialog.dismiss();
+                                            try {
+                                                ApiUtilities.Session.storeProjectId(response.getLong("projectId"), getApplicationContext());
+                                            } catch (Exception exception) {}
                                             Intent goMainScreen = new Intent(AddProjectActivity.this, DashboardActivity.class);
                                             startActivity(goMainScreen);
                                         }
