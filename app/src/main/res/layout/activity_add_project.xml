@@ -20,6 +20,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/create_project_password"
         android:textColor="@android:color/black"
