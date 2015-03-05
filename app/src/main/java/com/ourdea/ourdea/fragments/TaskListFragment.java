@@ -62,9 +62,9 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         }
     }
 
-    private void loadTasks() {
+    private void loadTasks(int sect) {
         String taskListType = "me";
-        switch (Integer.valueOf(section)) {
+        switch (sect) {
             case 1:
                 taskListType = "me";
                 break;
@@ -99,9 +99,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
     @Override
     public void onResume() {
         super.onResume();
-        loadTasks();
-        //Log.d("SER", "RESUMING");
-        //if (taskListContent != null) buildTaskList();
+        loadTasks(Integer.valueOf(section));
     }
 
     private void buildTaskList() {
@@ -121,6 +119,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
+        //mListView.setEmptyView(view.findViewById(android.R.id.empty));
 
         return view;
     }
@@ -200,7 +199,9 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task in progress", Toast.LENGTH_SHORT).show();
+                                    loadTasks(3);
                                     taskActivity.getViewPager().setCurrentItem(2);
+
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
@@ -212,6 +213,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                             TaskResource.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
+                                    loadTasks(4);
                                     taskActivity.getViewPager().setCurrentItem(3);
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
                                 }
@@ -229,6 +231,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task marked to do", Toast.LENGTH_SHORT).show();
+                                    loadTasks(2);
                                     taskActivity.getViewPager().setCurrentItem(1);
                                 }
                             }, new Response.ErrorListener() {
@@ -242,6 +245,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
+                                    loadTasks(4);
                                     taskActivity.getViewPager().setCurrentItem(3);
                                 }
                             }, new Response.ErrorListener() {
@@ -257,7 +261,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                     @Override
                                     public void onResponse(Object response) {
                                         Toast.makeText(getActivity(), "Task deleted", Toast.LENGTH_SHORT).show();
-                                        loadTasks();
+                                        loadTasks(Integer.valueOf(section));
                                     }
                                 },
                                 new Response.ErrorListener() {

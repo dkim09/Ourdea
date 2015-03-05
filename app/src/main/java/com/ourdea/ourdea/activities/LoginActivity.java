@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.UserResource;
 
 import org.json.JSONException;
@@ -64,6 +65,7 @@ public class LoginActivity extends Activity {
                                     Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
                                     String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
                                     Log.d("TESTING", "name: " + name);
+                                    ApiUtilities.Session.storeUserName(name, LoginActivity.this);
                                     SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
                                     editor.putString(getString(R.string.PROPERTY_EMAIL), email);

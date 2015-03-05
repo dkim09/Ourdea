@@ -23,7 +23,7 @@ public class ProjectResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
     }
 
-    public static void get(final String projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void get(final Long projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, ApiUtilities.SERVER_ADDRESS + "/project/" + projectId, null, successResponse, errorResponse) {
             @Override
