@@ -17,8 +17,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.api.ApiUtilities;
-import com.ourdea.ourdea.api.ProjectApi;
+import com.ourdea.ourdea.resources.ApiUtilities;
+import com.ourdea.ourdea.resources.ProjectResource;
 
 import org.json.JSONObject;
 
@@ -41,7 +41,7 @@ public class AddProjectActivity extends Activity {
                 final String nameValue = projectName.getText().toString();
                 final String passValue = projectPass.getText().toString();
 
-                ProjectApi.create(nameValue, passValue, context,
+                ProjectResource.create(nameValue, passValue, context,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {
@@ -56,7 +56,8 @@ public class AddProjectActivity extends Activity {
                                             dialog.dismiss();
                                             try {
                                                 ApiUtilities.Session.storeProjectId(response.getLong("projectId"), getApplicationContext());
-                                            } catch (Exception exception) {}
+                                            } catch (Exception exception) {
+                                            }
                                             Intent goMainScreen = new Intent(AddProjectActivity.this, DashboardActivity.class);
                                             startActivity(goMainScreen);
                                         }

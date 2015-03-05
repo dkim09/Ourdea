@@ -15,8 +15,8 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.api.UserApi;
 import com.ourdea.ourdea.gcm.GCMUtil;
+import com.ourdea.ourdea.resources.UserResource;
 
 
 public class RegisterActivity extends Activity {
@@ -61,22 +61,22 @@ public class RegisterActivity extends Activity {
         gcmUtil.registerInBackground(new GCMUtil.GCMRegistrationListener() {
             @Override
             public void onRegistrationComplete(String gcmId) {
-                UserApi.create(email, name, password, gcmId, getApplicationContext(), new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        Log.d("TESTING", "response: " + response.toString());
-                        Toast.makeText(RegisterActivity.this, "Account created!", Toast.LENGTH_LONG).show();
-                        Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
-                        startActivity(goLoginScreen);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("TESTING", "error: " + error.getMessage());
-                        Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
-                    }
-                });
+                UserResource.create(email, name, password, gcmId, getApplicationContext(), new Response.Listener() {
+                            @Override
+                            public void onResponse(Object response) {
+                                Log.d("TESTING", "response: " + response.toString());
+                                Toast.makeText(RegisterActivity.this, "Account created!", Toast.LENGTH_LONG).show();
+                                Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
+                                startActivity(goLoginScreen);
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("TESTING", "error: " + error.getMessage());
+                                Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
     }

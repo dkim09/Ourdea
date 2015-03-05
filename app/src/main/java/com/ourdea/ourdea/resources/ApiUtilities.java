@@ -1,4 +1,4 @@
-package com.ourdea.ourdea.api;
+package com.ourdea.ourdea.resources;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -22,8 +22,8 @@ import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.activities.AddEditTaskActivity;
 import com.ourdea.ourdea.activities.TaskActivity;
 import com.ourdea.ourdea.adapters.TaskListAdapter;
-import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.dto.TaskDto;
+import com.ourdea.ourdea.resources.TaskResource;
 
 import org.json.JSONArray;
 
@@ -79,7 +79,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                 break;
         }
 
-        TaskApi.getAll(taskListType, this.getActivity(),
+        TaskResource.getAll(taskListType, this.getActivity(),
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -196,7 +196,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                 switch (which) {
                     case 0:
                         if (taskStatus.equals("completed") || taskStatus.equals("todo")) {
-                            TaskApi.updateStatus(taskDto.getId(), "inprogress", getActivity(), new Response.Listener() {
+                            TaskResource.updateStatus(taskDto.getId(), "inprogress", getActivity(), new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task in progress", Toast.LENGTH_SHORT).show();
@@ -209,7 +209,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 }
                             });
                         } else if (taskStatus.equals("inprogress")) {
-                            TaskApi.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
+                            TaskResource.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
                                     taskActivity.getViewPager().setCurrentItem(3);
@@ -225,7 +225,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                         break;
                     case 1:
                         if (taskStatus.equals("completed") || taskStatus.equals("inprogress")) {
-                            TaskApi.updateStatus(taskDto.getId(), "todo", getActivity(), new Response.Listener() {
+                            TaskResource.updateStatus(taskDto.getId(), "todo", getActivity(), new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task marked to do", Toast.LENGTH_SHORT).show();
@@ -238,7 +238,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 }
                             });
                         } else if (taskStatus.equals("todo")) {
-                            TaskApi.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
+                            TaskResource.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
@@ -253,19 +253,19 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                         }
                         break;
                     case 2:
-                        TaskApi.delete(taskDto.getId(), getActivity(), new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-                                Toast.makeText(getActivity(), "Task deleted", Toast.LENGTH_SHORT).show();
-                                loadTasks();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getActivity(), "Task could not be deleted", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        TaskResource.delete(taskDto.getId(), getActivity(), new Response.Listener() {
+                                    @Override
+                                    public void onResponse(Object response) {
+                                        Toast.makeText(getActivity(), "Task deleted", Toast.LENGTH_SHORT).show();
+                                        loadTasks();
+                                    }
+                                },
+                                new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        Toast.makeText(getActivity(), "Task could not be deleted", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                         break;
                 }
             }

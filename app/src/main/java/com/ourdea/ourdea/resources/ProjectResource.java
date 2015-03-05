@@ -1,4 +1,4 @@
-package com.ourdea.ourdea.api;
+package com.ourdea.ourdea.resources;
 
 import android.content.Context;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class ProjectApi {
+public class ProjectResource {
 
     public static void getMembers(Long projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest

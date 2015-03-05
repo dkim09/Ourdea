@@ -1,4 +1,4 @@
-package com.ourdea.ourdea.api;
+package com.ourdea.ourdea.resources;
 
 import android.content.Context;
 
@@ -12,7 +12,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TagApi {
+public class TagResource {
 
     public static void tag(String email, Long taskId, String message, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();

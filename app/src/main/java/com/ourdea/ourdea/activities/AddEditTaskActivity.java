@@ -20,13 +20,13 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.api.ApiUtilities;
-import com.ourdea.ourdea.api.LabelApi;
-import com.ourdea.ourdea.api.ProjectApi;
-import com.ourdea.ourdea.api.TagApi;
-import com.ourdea.ourdea.api.TaskApi;
 import com.ourdea.ourdea.dto.LabelDto;
 import com.ourdea.ourdea.dto.TaskDto;
+import com.ourdea.ourdea.resources.ApiUtilities;
+import com.ourdea.ourdea.resources.LabelResource;
+import com.ourdea.ourdea.resources.ProjectResource;
+import com.ourdea.ourdea.resources.TagResource;
+import com.ourdea.ourdea.resources.TaskResource;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -74,7 +74,7 @@ public class AddEditTaskActivity extends Activity {
 
         // Load task if needed
         if (taskId != null) {
-            TaskApi.get(taskId, context,
+            TaskResource.get(taskId, context,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -95,7 +95,7 @@ public class AddEditTaskActivity extends Activity {
         }
 
         // Load labels
-        LabelApi.getAll(this,
+        LabelResource.getAll(this,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -122,7 +122,7 @@ public class AddEditTaskActivity extends Activity {
                 });
 
         // Load users
-        ProjectApi.getMembers(ApiUtilities.Session.getProjectId(context), context,
+        ProjectResource.getMembers(ApiUtilities.Session.getProjectId(context), context,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -157,15 +157,15 @@ public class AddEditTaskActivity extends Activity {
                 final String assigneeValue = assigneeAutoCompleteTextView.getText().toString();
 
                 if (taskId == null) {
-                    TaskApi.create(nameValue, descriptionValue, labelValue, assigneeValue, context,
+                    TaskResource.create(nameValue, descriptionValue, labelValue, assigneeValue, context,
                             new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
-                            finish();
-                            Log.d("SERVER_SUCCESS", "Task created");
-                        }
-                    },
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                    Log.d("SERVER_SUCCESS", "Task created");
+                                }
+                            },
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
@@ -173,21 +173,21 @@ public class AddEditTaskActivity extends Activity {
                                 }
                             });
                 } else {
-                    TaskApi.update(taskId, nameValue, descriptionValue, labelValue, assigneeValue, context,
-                        new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-                                finish();
-                                Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
-                                Log.d("SERVER_SUCCESS", "Task saved");
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("SERVER_ERROR", "Task could not be saved");
-                            }
-                        });
+                    TaskResource.update(taskId, nameValue, descriptionValue, labelValue, assigneeValue, context,
+                            new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+                                    finish();
+                                    Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
+                                    Log.d("SERVER_SUCCESS", "Task saved");
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d("SERVER_ERROR", "Task could not be saved");
+                                }
+                            });
                 }
             }
         });
@@ -214,54 +214,54 @@ public class AddEditTaskActivity extends Activity {
         int id = item.getItemId();
 
         if (id == R.id.action_delete_task) {
-            TaskApi.delete(taskId, this,
-                new Response.Listener() {
-                    @Override
-                    public void onResponse(Object response) {
-                        Toast.makeText(AddEditTaskActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
-                        Log.d("SERVER_SUCCESS", "Task deleted");
-                        finish();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("SERVER_ERROR", "Task could not be deleted");
-                    }
-                });
+            TaskResource.delete(taskId, this,
+                    new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+                            Toast.makeText(AddEditTaskActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
+                            Log.d("SERVER_SUCCESS", "Task deleted");
+                            finish();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("SERVER_ERROR", "Task could not be deleted");
+                        }
+                    });
             return true;
         } else if (id == R.id.action_done_task) {
-            TaskApi.updateStatus(taskId, "completed", this,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(AddEditTaskActivity.this, "Task completed", Toast.LENGTH_SHORT).show();
-                        Log.d("SERVER_SUCCESS", "Task marked as done");
-                        finish();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("SERVER_ERROR", "Task cannot be marked as done");
-                    }
-                });
+            TaskResource.updateStatus(taskId, "completed", this,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(AddEditTaskActivity.this, "Task completed", Toast.LENGTH_SHORT).show();
+                            Log.d("SERVER_SUCCESS", "Task marked as done");
+                            finish();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("SERVER_ERROR", "Task cannot be marked as done");
+                        }
+                    });
         } else if (id == R.id.action_in_progress_task) {
-            TaskApi.updateStatus(taskId, "inprogress", this,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Toast.makeText(AddEditTaskActivity.this, "Task in progress", Toast.LENGTH_SHORT).show();
-                        Log.d("SERVER_SUCCESS", "Task marked as inprogress");
-                        finish();
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("SERVER_ERROR", "Task cannot be marked as inprogress");
-                    }
-                });
+            TaskResource.updateStatus(taskId, "inprogress", this,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Toast.makeText(AddEditTaskActivity.this, "Task in progress", Toast.LENGTH_SHORT).show();
+                            Log.d("SERVER_SUCCESS", "Task marked as inprogress");
+                            finish();
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("SERVER_ERROR", "Task cannot be marked as inprogress");
+                        }
+                    });
         } else if (id == R.id.action_tag) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Tag user for attention");
@@ -281,19 +281,19 @@ public class AddEditTaskActivity extends Activity {
             builder.setPositiveButton("Tag", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    TagApi.tag(userAutoFill.getText().toString(), Long.parseLong(taskId), message.getText().toString(), getApplicationContext(),
-                        new Response.Listener() {
-                            @Override
-                            public void onResponse(Object response) {
-                                Toast.makeText(getApplicationContext(), "User tagged", Toast.LENGTH_SHORT).show();
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Toast.makeText(getApplicationContext(), "Could not tag user", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    TagResource.tag(userAutoFill.getText().toString(), Long.parseLong(taskId), message.getText().toString(), getApplicationContext(),
+                            new Response.Listener() {
+                                @Override
+                                public void onResponse(Object response) {
+                                    Toast.makeText(getApplicationContext(), "User tagged", Toast.LENGTH_SHORT).show();
+                                }
+                            },
+                            new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Toast.makeText(getApplicationContext(), "Could not tag user", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                 }
             });
 

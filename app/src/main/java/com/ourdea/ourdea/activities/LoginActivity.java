@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.api.UserApi;
+import com.ourdea.ourdea.resources.UserResource;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -56,33 +56,33 @@ public class LoginActivity extends Activity {
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
-                UserApi.login(email, password, getApplicationContext(),
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            try {
-                                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
-                                String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
-                                Log.d("TESTING", "name: " + name);
-                                SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString(getString(R.string.PROPERTY_EMAIL), email);
-                                editor.putString(getString(R.string.PROPERTY_USER_NAME), name);
-                                editor.apply();
-                                Intent goMainScreen = new Intent(LoginActivity.this, ProjectActivity.class);
-                                startActivity(goMainScreen);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                UserResource.login(email, password, getApplicationContext(),
+                        new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
+                                    String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
+                                    Log.d("TESTING", "name: " + name);
+                                    SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    editor.putString(getString(R.string.PROPERTY_EMAIL), email);
+                                    editor.putString(getString(R.string.PROPERTY_USER_NAME), name);
+                                    editor.apply();
+                                    Intent goMainScreen = new Intent(LoginActivity.this, ProjectActivity.class);
+                                    startActivity(goMainScreen);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("TESTING", "error: " + error.getMessage());
-                            Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("TESTING", "error: " + error.getMessage());
+                                Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
     }

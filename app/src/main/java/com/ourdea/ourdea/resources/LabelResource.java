@@ -1,4 +1,4 @@
-package com.ourdea.ourdea.api;
+package com.ourdea.ourdea.resources;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import com.ourdea.ourdea.utilities.RequestQueueSingleton;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LabelApi {
+public class LabelResource {
 
     public static void getAll(final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest

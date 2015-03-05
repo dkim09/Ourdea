@@ -20,8 +20,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.adapters.ChatAdapter;
-import com.ourdea.ourdea.api.ProjectApi;
 import com.ourdea.ourdea.dto.Comment;
+import com.ourdea.ourdea.resources.ProjectResource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -112,14 +112,14 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     }
 
     private void loadChat (){
-        ProjectApi.getChat(mProjectId, this.getActivity(), new Response.Listener<JSONArray>() {
+        ProjectResource.getChat(mProjectId, this.getActivity(), new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {
                     mComments.clear();
                     int length = response.length();
-                    for (int i = 0; i < length; i++){
-                        Comment newComment = new Comment (mContext, mEmail, response.getJSONObject(i));
+                    for (int i = 0; i < length; i++) {
+                        Comment newComment = new Comment(mContext, mEmail, response.getJSONObject(i));
                         mComments.add(newComment);
                     }
                     mAdapterChat.notifyDataSetChanged();
@@ -147,7 +147,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         comment.setIsLoading(true);
         mComments.add(comment);
         mAdapterChat.notifyDataSetChanged();
-        ProjectApi.comment(mProjectId, comment.getContent(), this.getActivity(), new Response.Listener() {
+        ProjectResource.comment(mProjectId, comment.getContent(), this.getActivity(), new Response.Listener() {
             @Override
             public void onResponse(Object response) {
                 Log.d("TESTING", "response from server: " + response.toString());
