@@ -30,6 +30,17 @@ public class ApiUtilities {
         public static String getUser(Context context) {
             return context.getApplicationContext().getSharedPreferences("store", 0).getString("user", "SESSION_USER_BROKEN");
         }
+
+        public static void storeProjectId(Long projectId, Context context) {
+            SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("store", 0);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putLong("projectId", projectId);
+            editor.commit();
+        }
+
+        public static Long getProjectId(Context context) {
+            return context.getApplicationContext().getSharedPreferences("store", 0).getLong("projectId", -1);
+        }
     }
 
 }
