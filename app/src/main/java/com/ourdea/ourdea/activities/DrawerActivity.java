@@ -103,6 +103,7 @@ public class DrawerActivity extends Activity {
                     intent = new Intent(getApplicationContext(), MeetingActivity.class);
                     break;
                 case "Map":
+                    intent = new Intent(getApplicationContext(), MapActivity.class);
                     break;
             }
 

@@ -6,12 +6,20 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <permission
         android:name="com.ourdea.ourdea.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
     <uses-permission android:name="com.ourdea.ourdea.permission.C2D_MESSAGE" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -56,20 +64,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ourdea.ourdea.activities.DashboardActivity" />
         </activity>
-
-        <!-- GCM -->
-        <receiver
-            android:name=".gcm.GCMBroadcastReceiver"
-            android:permission="com.google.android.c2dm.permission.SEND" >
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-
-                <category android:name="com.ourdea.ourdea" />
-            </intent-filter>
-        </receiver>
-
-        <service android:name=".gcm.GCMIntentService" />
-
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" >
@@ -91,6 +85,35 @@
             android:name=".activities.AddProjectActivity"
             android:label="@string/title_activity_create_project" >
         </activity>
+        <activity
+            android:name=".activities.MapActivity"
+            android:label="@string/title_activity_map"
+            android:parentActivityName=".activities.DashboardActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ourdea.ourdea.activities.TaskActivity" />
+        </activity>
+
+
+
+        <!-- Other Application Stuff (not activities) -->
+        <!-- Google Maps Api -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDT5uncv9WsHIEHI8IjkH64mFrtggi2fqc"/>
+
+        <!-- GCM -->
+        <receiver
+            android:name=".gcm.GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
+                <category android:name="com.ourdea.ourdea" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".gcm.GCMIntentService" />
     </application>
 
 </manifest>
