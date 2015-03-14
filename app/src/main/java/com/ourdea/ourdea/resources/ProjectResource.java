@@ -172,4 +172,19 @@ public class ProjectResource {
 
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
+
+    public static void getLocations (int projectId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (ApiUtilities.SERVER_ADDRESS + "/project/"+projectId+"/locations", successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
+    }
 }

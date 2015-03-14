@@ -27,6 +27,8 @@
     <string name="PROPERTY_COMMENT_MINE">commentMine</string>
     <string name="PROPERTY_COMMENT_CONTENT">content</string>
     <string name="PROPERTY_COMMENT_TIME">time</string>
+    <string name="PROPERTY_LATITUDE">latitude</string>
+    <string name="PROPERTY_LONGITUDE">longitude</string>
 
     <string-array name="drawer_items">
         <item>Dashboard</item>
