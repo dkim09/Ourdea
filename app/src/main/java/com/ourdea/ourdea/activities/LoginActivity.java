@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -35,7 +36,12 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_login);
+
+        // Hide action bar
+
+        getActionBar().hide();
 
         mEmail = (EditText)findViewById(R.id.emailLoginTextBox);
         mPassword = (EditText)findViewById(R.id.passwordLoginTextBox);
