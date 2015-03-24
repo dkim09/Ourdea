@@ -39,7 +39,7 @@ public class ProjectActivity extends Activity {
                     final String idValue = projectId.getText().toString();
                     final String passValue = projectPass.getText().toString();
 
-                    ProjectResource.join(idValue, passValue, context,
+                    ProjectResource.join(idValue, passValue, 0, 0, context,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {

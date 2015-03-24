@@ -39,11 +39,13 @@ public class ProjectResource {
     }
 
 
-    public static void create(final String name, final String password, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void create(final String name, final String password, final double latitude, final double longitude, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("name", name);
             params.put("password", password);
+            params.put("latitude", ""+latitude);
+            params.put("longitude", ""+longitude);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -60,10 +62,12 @@ public class ProjectResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void join(final String projectId, final String password, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void join(final String projectId, final String password, final double latitude, final double longitude, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
             params.put("password", password);
+            params.put("latitude", ""+latitude);
+            params.put("longitude", ""+longitude);
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -186,5 +190,26 @@ public class ProjectResource {
         };
 
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
+    }
+
+    public static void updateLocation (int projectId, final double latitude, final double longitude, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JSONObject params = new JSONObject();
+        try {
+            params.put("latitude", ""+latitude);
+            params.put("longitude", ""+longitude);
+        } catch (Exception exception) { }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/project/"+projectId+"/updateLocation", params, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 }

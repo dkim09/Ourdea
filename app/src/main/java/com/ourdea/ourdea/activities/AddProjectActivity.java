@@ -41,7 +41,7 @@ public class AddProjectActivity extends Activity {
                 final String nameValue = projectName.getText().toString();
                 final String passValue = projectPass.getText().toString();
 
-                ProjectResource.create(nameValue, passValue, context,
+                ProjectResource.create(nameValue, passValue, 0, 0, context,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {

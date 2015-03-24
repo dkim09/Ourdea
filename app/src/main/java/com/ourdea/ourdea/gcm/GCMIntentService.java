@@ -100,7 +100,7 @@ public class GCMIntentService extends IntentService {
 
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this)
-        .setSmallIcon(R.drawable.ic_action_assign_to_me)
+        .setSmallIcon(R.drawable.ic_launcher)
         .setContentTitle(title)
         .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
         .setContentText(message)
