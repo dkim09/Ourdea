@@ -36,6 +36,7 @@
         <item>Meetings</item>
         <item>Chat</item>
         <item>Map</item>
+        <item>Logout</item>
     </string-array>
 
     <string name="title_activity_meeting">Meetings</string>

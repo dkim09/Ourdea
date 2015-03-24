@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class ApiUtilities {
 
     //final static public String SERVER_ADDRESS = "http://52.10.50.18:9000"; // AWS server
-    final static public String SERVER_ADDRESS = "http://192.168.0.11:9000"; // Daniel server
+    final static public String SERVER_ADDRESS = "http://57187c16.ngrok.com"; // Daniel server
 
     public static class Session {
 
@@ -52,6 +52,29 @@ public class ApiUtilities {
 
         public static Long getProjectId(Context context) {
             return context.getApplicationContext().getSharedPreferences("store", 0).getLong("projectId", -1);
+        }
+
+        public static void storePassword(String password, Context context) {
+            SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("store", 0);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("password", password);
+            editor.commit();
+        }
+
+        public static String getPassword(Context context) {
+            return context.getApplicationContext().getSharedPreferences("store", 0).getString("password", "SESSION_USER_PASSWORD_BROKEN");
+        }
+
+        public static void clearSession(Context context) {
+            SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("store", 0);
+            SharedPreferences.Editor editor = sharedPref.edit();
+
+            editor.remove("password");
+            editor.remove("username");
+            editor.remove("projectId");
+            editor.remove("sessionId");
+            editor.remove("user");
+            editor.commit();
         }
     }
 

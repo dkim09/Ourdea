@@ -11,8 +11,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.resources.ApiUtilities;
+import com.ourdea.ourdea.resources.UserResource;
 
 public class DrawerActivity extends Activity {
 
@@ -105,6 +110,22 @@ public class DrawerActivity extends Activity {
                 case "Map":
                     intent = new Intent(getApplicationContext(), MapActivity.class);
                     break;
+                case "Logout":
+                    UserResource.logout(getApplicationContext(), new Response.Listener() {
+                        @Override
+                        public void onResponse(Object response) {
+                            Toast.makeText(getApplicationContext(), "Logged out!", Toast.LENGTH_SHORT).show();
+                            ApiUtilities.Session.clearSession(getApplicationContext());
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(), "Could not logout!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
             }
 
             startActivity(intent);

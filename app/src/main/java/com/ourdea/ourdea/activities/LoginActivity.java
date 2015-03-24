@@ -40,7 +40,6 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.activity_login);
 
         // Hide action bar
-
         getActionBar().hide();
 
         mEmail = (EditText)findViewById(R.id.emailLoginTextBox);
@@ -48,6 +47,16 @@ public class LoginActivity extends Activity {
         mLoginButton = (Button)findViewById(R.id.loginButton);
         mGoRegisterButton = (Button)findViewById(R.id.goRegisterButton);
         mContext = this;
+
+        // Try to retrieve previous session information
+        String email = ApiUtilities.Session.getUser(LoginActivity.this);
+        String password = ApiUtilities.Session.getPassword(LoginActivity.this);
+
+        // Fill in details with previous session stuff
+        if (!email.equals("SESSION_USER_BROKEN") && !password.equals("SESSION_USER_PASSWORD_BROKEN")) {
+            mEmail.setText(email);
+            mPassword.setText(password);
+        }
 
         mGoRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +79,10 @@ public class LoginActivity extends Activity {
                                 try {
                                     Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
                                     String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
+                                    String password = response.getString("password");
                                     Log.d("TESTING", "name: " + name);
                                     ApiUtilities.Session.storeUserName(name, LoginActivity.this);
+                                    ApiUtilities.Session.storePassword(password, LoginActivity.this);
                                     SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
                                     editor.putString(getString(R.string.PROPERTY_EMAIL), email);
