@@ -23,7 +23,7 @@ public class DashboardActivity extends DrawerActivity {
 
         TextView dashboardTitle = (TextView) findViewById(R.id.dash_title);
         final TextView dashboardSubTitle = (TextView) findViewById(R.id.dash_subtitle);
-        dashboardTitle.setText("Welcome " + ApiUtilities.Session.getUserName(DashboardActivity.this));
+        dashboardTitle.setText("Welcome " + ApiUtilities.Session.getName(DashboardActivity.this));
 
         ProjectResource.get(ApiUtilities.Session.getProjectId(this), this, new Response.Listener<JSONObject>() {
             @Override

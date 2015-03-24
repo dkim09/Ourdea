@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ourdea.ourdea.dto.UserDto;
 import com.ourdea.ourdea.utilities.RequestQueueSingleton;
 
 import org.json.JSONObject;
@@ -25,13 +26,13 @@ public class UserResource {
     }
 
 
-    public static void create(final String email, final String name, final String password, final String gcmId, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void create(UserDto user, Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
-            params.put("email", email);
-            params.put("name", name);
-            params.put("password", password);
-            params.put("gcmId", gcmId);
+            params.put("email", user.getEmail());
+            params.put("name", user.getName());
+            params.put("password", user.getPassword());
+            params.put("gcmId", user.getGcmId());
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -40,11 +41,11 @@ public class UserResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void login(final String email, final String password, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void login(final UserDto user, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
-            params.put("email", email);
-            params.put("password", password);
+            params.put("email", user.getEmail());
+            params.put("password", user.getPassword());
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -54,7 +55,6 @@ public class UserResource {
                 // Store session id for future API call
                 String sessionId = response.headers.get("Set-Cookie");
                 ApiUtilities.Session.storeSession(sessionId, context);
-                ApiUtilities.Session.storeUser(email, context);
 
                 return super.parseNetworkResponse(response);
             }

@@ -66,7 +66,7 @@ public class AddEditTaskActivity extends Activity {
         assignToMeImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                assigneeAutoCompleteTextView.setText(ApiUtilities.Session.getUser(getApplicationContext()));
+                assigneeAutoCompleteTextView.setText(ApiUtilities.Session.getEmail(getApplicationContext()));
             }
         });
 

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.dto.UserDto;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.UserResource;
 
@@ -49,11 +50,11 @@ public class LoginActivity extends Activity {
         mContext = this;
 
         // Try to retrieve previous session information
-        String email = ApiUtilities.Session.getUser(LoginActivity.this);
+        String email = ApiUtilities.Session.getEmail(LoginActivity.this);
         String password = ApiUtilities.Session.getPassword(LoginActivity.this);
 
         // Fill in details with previous session stuff
-        if (!email.equals("SESSION_USER_BROKEN") && !password.equals("SESSION_USER_PASSWORD_BROKEN")) {
+        if (!email.equals(ApiUtilities.Session.EMAIL_MISSING) && !password.equals(ApiUtilities.Session.PASSWORD_MISSING)) {
             mEmail.setText(email);
             mPassword.setText(password);
         }
@@ -72,7 +73,9 @@ public class LoginActivity extends Activity {
                 final String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
 
-                UserResource.login(email, password, getApplicationContext(),
+                UserDto user = new UserDto(email, password);
+
+                UserResource.login(user, getApplicationContext(),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -81,8 +84,11 @@ public class LoginActivity extends Activity {
                                     String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
                                     String password = response.getString("password");
                                     Log.d("TESTING", "name: " + name);
-                                    ApiUtilities.Session.storeUserName(name, LoginActivity.this);
+
+                                    ApiUtilities.Session.storeEmail(email, LoginActivity.this);
                                     ApiUtilities.Session.storePassword(password, LoginActivity.this);
+                                    ApiUtilities.Session.storeName(name, LoginActivity.this);
+
                                     SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = prefs.edit();
                                     editor.putString(getString(R.string.PROPERTY_EMAIL), email);

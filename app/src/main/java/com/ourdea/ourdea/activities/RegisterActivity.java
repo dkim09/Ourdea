@@ -15,7 +15,9 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.dto.UserDto;
 import com.ourdea.ourdea.gcm.GCMUtil;
+import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.UserResource;
 
 
@@ -61,11 +63,18 @@ public class RegisterActivity extends Activity {
         gcmUtil.registerInBackground(new GCMUtil.GCMRegistrationListener() {
             @Override
             public void onRegistrationComplete(String gcmId) {
-                UserResource.create(email, name, password, gcmId, getApplicationContext(), new Response.Listener() {
+                UserDto user = new UserDto(email, password, gcmId, name);
+
+                UserResource.create(user, getApplicationContext(), new Response.Listener() {
                             @Override
                             public void onResponse(Object response) {
                                 Log.d("TESTING", "response: " + response.toString());
                                 Toast.makeText(RegisterActivity.this, "Account created!", Toast.LENGTH_LONG).show();
+
+                                ApiUtilities.Session.storeName(name, getApplicationContext());
+                                ApiUtilities.Session.storeEmail(email, getApplicationContext());
+                                ApiUtilities.Session.storePassword(password, getApplicationContext());
+
                                 Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(goLoginScreen);
                             }
