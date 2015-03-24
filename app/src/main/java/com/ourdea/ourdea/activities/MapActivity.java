@@ -12,6 +12,11 @@ import com.android.volley.VolleyError;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.ProjectResource;
@@ -19,10 +24,12 @@ import com.ourdea.ourdea.resources.ProjectResource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class MapActivity extends FragmentActivity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private int mProjectId;
 
+    private MapFragment mMapFragment;
+    private GoogleMap mMap;
     private Button btn_update;
 
     private GoogleApiClient mGoogleApiClient;
@@ -34,6 +41,9 @@ public class MapActivity extends FragmentActivity implements View.OnClickListene
         setContentView(R.layout.activity_map);
 
         mProjectId = ApiUtilities.Session.getProjectId(getApplicationContext()).intValue();
+        mMapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map_fragment);
+        mMapFragment.getMapAsync(this);
+
         btn_update = (Button) findViewById(R.id.btn_update);
         btn_update.setOnClickListener(this);
         buildGoogleApiClient();
@@ -58,10 +68,13 @@ public class MapActivity extends FragmentActivity implements View.OnClickListene
         if (v.equals(btn_update)){
             mGoogleLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (mGoogleLocation != null){
-                ProjectResource.updateLocation(mProjectId, mGoogleLocation.getLatitude(), mGoogleLocation.getLongitude(), this, new Response.Listener<JSONObject>() {
+                final double latitude = mGoogleLocation.getLatitude();
+                final double longitude = mGoogleLocation.getLongitude();
+                ProjectResource.updateLocation(mProjectId, latitude, longitude, this, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("TESTING", "location: " + mGoogleLocation.getLatitude() + ", " + mGoogleLocation.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title("newMarker"));
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -113,5 +126,10 @@ public class MapActivity extends FragmentActivity implements View.OnClickListene
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
     }
 }
