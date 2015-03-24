@@ -11,13 +11,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.ourdea.ourdea.R;
-import com.ourdea.ourdea.dto.Comment;
+import com.ourdea.ourdea.dto.CommentDto;
 
 import java.util.ArrayList;
 
 public class ChatAdapter extends BaseAdapter {
 
-    private ArrayList<Comment> mComments;
+    private ArrayList<CommentDto> mComments;
     private LayoutInflater mInflater;
     private Context mContext;
     private int mLeftBubble;
@@ -31,7 +31,7 @@ public class ChatAdapter extends BaseAdapter {
         ProgressBar prg_loading;
     }
 
-    public ChatAdapter (Context context, ArrayList<Comment> comments, int leftBubble, int rightBubble){
+    public ChatAdapter (Context context, ArrayList<CommentDto> comments, int leftBubble, int rightBubble){
         mContext = context;
         mComments = comments;
         mLeftBubble = leftBubble;
@@ -74,7 +74,7 @@ public class ChatAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
         viewHolder.layout_comment.removeAllViews();
-        Comment comment = mComments.get(position);
+        CommentDto comment = mComments.get(position);
 
 //        int color = comment.getColor();
 //        int letter = comment.getLetter();

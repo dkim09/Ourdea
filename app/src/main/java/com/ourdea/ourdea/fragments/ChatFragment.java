@@ -20,7 +20,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.adapters.ChatAdapter;
-import com.ourdea.ourdea.dto.Comment;
+import com.ourdea.ourdea.dto.CommentDto;
 import com.ourdea.ourdea.resources.ProjectResource;
 
 import org.json.JSONArray;
@@ -41,7 +41,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
     private int mProjectId;
     private int mLeftBubble;
     private int mRightBubble;
-    private ArrayList<Comment> mComments;
+    private ArrayList<CommentDto> mComments;
 
     private BroadcastReceiver chatReceiver = new BroadcastReceiver() {
         @Override
@@ -54,7 +54,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
                     int commentId = Integer.parseInt(intent.getStringExtra(getString(R.string.PROPERTY_COMMENT_ID)));
                     String content = intent.getStringExtra(getString(R.string.PROPERTY_COMMENT_CONTENT));
                     String name = intent.getStringExtra(getString(R.string.PROPERTY_USER_NAME));
-                    Comment newComment = new Comment (mProjectId, commentId, false, name, content, 0);
+                    CommentDto newComment = new CommentDto(mProjectId, commentId, false, name, content, 0);
                     addNewCommentToChat (newComment);
                 }
                 abortBroadcast();
@@ -79,7 +79,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
 
         mContext = getActivity();
 
-        mComments = new ArrayList<Comment>();
+        mComments = new ArrayList<CommentDto>();
         mAdapterChat = new ChatAdapter(mContext, mComments, mLeftBubble, mRightBubble);
         setListAdapter(mAdapterChat);
         mList = getListView();
@@ -96,7 +96,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         if (v.equals(btn_send)){
             String content = txt_comment.getText().toString();
             if (content.trim().length() > 0){
-                Comment newComment = new Comment(mProjectId, 0, true, mName, txt_comment.getText().toString(), 0);
+                CommentDto newComment = new CommentDto(mProjectId, 0, true, mName, txt_comment.getText().toString(), 0);
                 sendComment(newComment);
                 txt_comment.setText("");
             }
@@ -119,7 +119,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
                     mComments.clear();
                     int length = response.length();
                     for (int i = 0; i < length; i++) {
-                        Comment newComment = new Comment(mContext, mEmail, response.getJSONObject(i));
+                        CommentDto newComment = new CommentDto(mContext, mEmail, response.getJSONObject(i));
                         mComments.add(newComment);
                     }
                     mAdapterChat.notifyDataSetChanged();
@@ -143,7 +143,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         });
     }
 
-    private void sendComment (final Comment comment){
+    private void sendComment (final CommentDto comment){
         comment.setIsLoading(true);
         mComments.add(comment);
         mAdapterChat.notifyDataSetChanged();
@@ -162,7 +162,7 @@ public class ChatFragment extends ListFragment implements View.OnClickListener {
         });
     }
 
-    private void addNewCommentToChat (Comment comment){
+    private void addNewCommentToChat (CommentDto comment){
         mComments.add(comment);
         mAdapterChat.notifyDataSetChanged();
     }

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-public class Comment {
+public class CommentDto {
 
     private int mCommentId;
     private int mProjectId;
@@ -21,11 +21,11 @@ public class Comment {
     private String mTime;
     private Boolean mIsLoading;
 
-    public Comment (){
+    public CommentDto(){
 
     }
 
-    public Comment (int projectId, int commentId, boolean isMyComment, String name, String content, int minutesAgo){
+    public CommentDto(int projectId, int commentId, boolean isMyComment, String name, String content, int minutesAgo){
         mProjectId = projectId;
         mCommentId = commentId;
         mIsMyComment = isMyComment;
@@ -35,7 +35,7 @@ public class Comment {
         mIsLoading = false;
     }
 
-    public Comment (Context context, String email, JSONObject jsonObject) throws JSONException {
+    public CommentDto(Context context, String email, JSONObject jsonObject) throws JSONException {
         JSONObject user = jsonObject.getJSONObject("user");
         setCommentId(jsonObject.getInt(context.getString(R.string.PROPERTY_COMMENT_ID)));
         setProjectId(jsonObject.getInt(context.getString(R.string.PROPERTY_PROJECT_ID)));
