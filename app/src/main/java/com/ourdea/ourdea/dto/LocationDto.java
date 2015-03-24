@@ -7,18 +7,18 @@ import com.ourdea.ourdea.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Location {
+public class LocationDto {
 
     private String mEmail;
     private String mName;
     private double mLatitude;
     private double mLongitude;
 
-    public Location (){
+    public LocationDto(){
 
     }
 
-    public Location (Context context, JSONObject jsonObject) throws JSONException {
+    public LocationDto(Context context, JSONObject jsonObject) throws JSONException {
         setEmail(jsonObject.getString(context.getString(R.string.PROPERTY_EMAIL)));
         setName(jsonObject.getString(context.getString(R.string.PROPERTY_USER_NAME)));
         setLatitude(jsonObject.getDouble(context.getString(R.string.PROPERTY_LATITUDE)));
