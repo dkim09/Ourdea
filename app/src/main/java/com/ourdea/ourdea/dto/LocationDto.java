@@ -19,10 +19,11 @@ public class LocationDto {
     }
 
     public LocationDto(Context context, JSONObject jsonObject) throws JSONException {
-        setEmail(jsonObject.getString(context.getString(R.string.PROPERTY_EMAIL)));
-        setName(jsonObject.getString(context.getString(R.string.PROPERTY_USER_NAME)));
+        JSONObject user = jsonObject.getJSONObject("user");
+        setEmail(user.getString(context.getString(R.string.PROPERTY_EMAIL)));
+        setName(user.getString(context.getString(R.string.PROPERTY_USER_NAME)));
         setLatitude(jsonObject.getDouble(context.getString(R.string.PROPERTY_LATITUDE)));
-        setLatitude(jsonObject.getDouble(context.getString(R.string.PROPERTY_LONGITUDE)));
+        setLongitude(jsonObject.getDouble(context.getString(R.string.PROPERTY_LONGITUDE)));
 
     }
 
