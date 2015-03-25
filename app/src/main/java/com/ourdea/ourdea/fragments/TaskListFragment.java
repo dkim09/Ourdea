@@ -199,8 +199,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task in progress", Toast.LENGTH_SHORT).show();
-                                    loadTasks(3);
                                     taskActivity.getViewPager().setCurrentItem(2);
+                                    mListView.setAdapter(mAdapter);
 
                                 }
                             }, new Response.ErrorListener() {
@@ -213,8 +213,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                             TaskResource.updateStatus(taskDto.getId(), "completed", getActivity(), new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
-                                    loadTasks(4);
                                     taskActivity.getViewPager().setCurrentItem(3);
+                                    mListView.setAdapter(mAdapter);
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
                                 }
                             }, new Response.ErrorListener() {
@@ -231,8 +231,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task marked to do", Toast.LENGTH_SHORT).show();
-                                    loadTasks(2);
                                     taskActivity.getViewPager().setCurrentItem(1);
+                                    mListView.setAdapter(mAdapter);
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
@@ -245,8 +245,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 @Override
                                 public void onResponse(Object response) {
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
-                                    loadTasks(4);
                                     taskActivity.getViewPager().setCurrentItem(3);
+                                    mListView.setAdapter(mAdapter);
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
