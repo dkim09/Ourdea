@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.dto.ProjectDto;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.ProjectResource;
 
@@ -41,7 +42,9 @@ public class AddProjectActivity extends Activity {
                 final String nameValue = projectName.getText().toString();
                 final String passValue = projectPass.getText().toString();
 
-                ProjectResource.create(nameValue, passValue, 0, 0, context,
+                ProjectDto project = new ProjectDto(nameValue, passValue);
+
+                ProjectResource.create(project, 0, 0, context,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {
