@@ -49,6 +49,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
     private String status;
 
+    private ArrayList<String> usersExceptMe;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,6 +181,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                             } catch (Exception exception) {
                             }
                         }
+                        usersExceptMe = new ArrayList<>(users);
+                        usersExceptMe.remove(ApiUtilities.Session.getEmail(getApplicationContext()));
 
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, users);
                         assigneeAutoCompleteTextView.setAdapter(adapter);
@@ -269,7 +273,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
             final View dialogView = View.inflate(this, R.layout.dialog_tag_user, null);
             final AutoCompleteTextView userAutoFill = (AutoCompleteTextView) dialogView.findViewById(R.id.user_autofill);
             final EditText message = (EditText) dialogView.findViewById(R.id.message);
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, users);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, usersExceptMe);
             userAutoFill.setAdapter(adapter);
             builder.setView(dialogView);
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
