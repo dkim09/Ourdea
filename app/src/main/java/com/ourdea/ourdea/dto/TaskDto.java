@@ -2,6 +2,8 @@ package com.ourdea.ourdea.dto;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
+
 public class TaskDto {
     private String label;
     private String description;
@@ -11,12 +13,16 @@ public class TaskDto {
     private String name;
     private String status;
 
-    public TaskDto(String name, String description, String assignedTo, String label, Long dueDate, String status) {
+    public TaskDto(String name, String description, String assignedTo, String label, Calendar dueDateTime, String status) {
         this.name = name;
         this.description = description;
         this.assignedTo = assignedTo;
         this.label = label;
-        this.dueDate = dueDate;
+        if (dueDateTime != null) {
+            this.dueDate = dueDateTime.getTimeInMillis();
+        } else {
+            this.dueDate = null;
+        }
         this.status = status;
     }
 
@@ -27,7 +33,9 @@ public class TaskDto {
             this.description = jsonObject.getString("description");
             this.assignedTo = jsonObject.getJSONObject("assignedTo").getString("email");
             this.label = jsonObject.getJSONObject("label").getString("name");
-            this.dueDate = jsonObject.getLong("dueDate");
+            if (!jsonObject.isNull("dueDate")) {
+                this.dueDate = jsonObject.getLong("dueDate");
+            }
             this.status = jsonObject.getString("status");
         } catch (Exception exception) {
 
@@ -36,7 +44,7 @@ public class TaskDto {
 
     @Override
     public String toString() {
-        return name;
+        return name.equals("") ? "Task" : name;
     }
 
     public String getId() {
@@ -47,11 +55,11 @@ public class TaskDto {
     }
 
     public String getDescription() {
-        return description;
+        return description.equals("") ? "Description" : description;
     }
 
     public String getAssignedTo() {
-        return assignedTo;
+        return assignedTo.equals("") ? "me" : assignedTo;
     }
 
     public Long getDueDate() {

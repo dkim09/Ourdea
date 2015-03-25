@@ -45,11 +45,11 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
     private ArrayList<String> users;
 
-    private Calendar taskDueDateTime = Calendar.getInstance();
+    private ArrayList<String> usersExceptMe;
+
+    private Calendar taskDueDateTime = null;
 
     private String status;
-
-    private ArrayList<String> usersExceptMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +86,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                         description.getText().toString(),
                         assigneeAutoCompleteTextView.getText().toString(),
                         labelAutoCompleteTextView.getText().toString(),
-                        taskDueDateTime.getTimeInMillis(),
+                        taskDueDateTime,
                         status);
 
                 TaskResource.update(taskId, taskToUpdate, context, new Response.Listener() {
@@ -124,7 +124,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                             assigneeAutoCompleteTextView.setText(task.getAssignedTo());
                             name.setText(task.getName());
                             description.setText(task.getDescription());
-                            taskDueDateTime.setTimeInMillis(task.getDueDate());
+                            setTaskDueDateTime(task.getDueDate());
                             setFormattedDateFromCalendar();
                             setFormattedTimeFromCalendar();
                             status = task.getStatus();
@@ -196,6 +196,14 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                 });
     }
 
+    private void setTaskDueDateTime(Long dueDateTime) {
+        if (dueDateTime != null) {
+            if (taskDueDateTime == null) {
+                taskDueDateTime = Calendar.getInstance();
+            }
+            taskDueDateTime.setTimeInMillis(dueDateTime);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -316,7 +324,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
             final String assigneeValue = assigneeAutoCompleteTextView.getText().toString();
 
             if (taskId == null) {
-                TaskDto newTask = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime.getTimeInMillis(), "todo");
+                TaskDto newTask = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime, "todo");
+
                 TaskResource.create(newTask, context,
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -333,7 +342,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                             }
                         });
             } else {
-                TaskDto taskToUpdate = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime.getTimeInMillis(), "todo");
+                TaskDto taskToUpdate = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime, "todo");
                 TaskResource.update(taskId, taskToUpdate, context,
                         new Response.Listener() {
                             @Override
@@ -369,6 +378,9 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
+        if (taskDueDateTime == null) {
+            taskDueDateTime = Calendar.getInstance();
+        }
         taskDueDateTime.set(Calendar.YEAR, year);
         taskDueDateTime.set(Calendar.MONTH, month);
         taskDueDateTime.set(Calendar.DAY_OF_MONTH, day);
@@ -377,15 +389,20 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
     }
 
     private void setFormattedDateFromCalendar() {
-        SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
-        String formattedDateString = formatter.format(taskDueDateTime.getTime());
+        if (taskDueDateTime != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
+            String formattedDateString = formatter.format(taskDueDateTime.getTime());
 
-        EditText editText = (EditText) findViewById(R.id.select_date);
-        editText.setText(formattedDateString);
+            EditText editText = (EditText) findViewById(R.id.select_date);
+            editText.setText(formattedDateString);
+        }
     }
 
     @Override
     public void onTimeSet(TimePicker view, int hour, int minute) {
+        if (taskDueDateTime == null) {
+            taskDueDateTime = Calendar.getInstance();
+        }
         taskDueDateTime.set(Calendar.HOUR_OF_DAY, hour);
         taskDueDateTime.set(Calendar.MINUTE, minute);
 
@@ -393,10 +410,12 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
     }
 
     private void setFormattedTimeFromCalendar() {
-        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
-        String formattedTimeString = formatter.format(taskDueDateTime.getTime());
+        if (taskDueDateTime != null) {
+            SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+            String formattedTimeString = formatter.format(taskDueDateTime.getTime());
 
-        EditText editText = (EditText) findViewById(R.id.select_time);
-        editText.setText(formattedTimeString);
+            EditText editText = (EditText) findViewById(R.id.select_time);
+            editText.setText(formattedTimeString);
+        }
     }
 }
