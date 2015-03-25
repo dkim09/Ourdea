@@ -3,7 +3,6 @@ package com.ourdea.ourdea.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -61,7 +60,7 @@ public class LoginActivity extends Activity {
 
         mGoRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 Intent goRegisterScreen = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(goRegisterScreen);
             }
@@ -89,11 +88,6 @@ public class LoginActivity extends Activity {
                                     ApiUtilities.Session.storePassword(password, LoginActivity.this);
                                     ApiUtilities.Session.storeName(name, LoginActivity.this);
 
-                                    SharedPreferences prefs = getSharedPreferences(getString(R.string.PROPERTY_NAME), Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    editor.putString(getString(R.string.PROPERTY_EMAIL), email);
-                                    editor.putString(getString(R.string.PROPERTY_USER_NAME), name);
-                                    editor.apply();
                                     Intent goMainScreen = new Intent(LoginActivity.this, ProjectActivity.class);
                                     startActivity(goMainScreen);
                                 } catch (JSONException e) {
