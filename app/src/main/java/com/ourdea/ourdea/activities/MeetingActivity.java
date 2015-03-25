@@ -1,12 +1,24 @@
 package com.ourdea.ourdea.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.GridLayout;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.dto.MeetingDto;
+import com.ourdea.ourdea.resources.ApiUtilities;
+import com.ourdea.ourdea.resources.MeetingResource;
+
+import org.json.JSONArray;
 
 public class MeetingActivity extends DrawerActivity {
+
+    private GridLayout gridLayout;
+    private MeetingDto meeting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,6 +27,34 @@ public class MeetingActivity extends DrawerActivity {
         this.setActivity("Meetings");
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        MeetingResource.getAll(ApiUtilities.Session.getProjectId(getApplicationContext()), "active", this,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // We'll assume at most one meeting right now
+                        try {
+                            meeting = new MeetingDto(response.getJSONObject(0));
+                            buildActiveMeeting();
+                        } catch (Exception exception) {
+
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("SERVER_ERROR", "Could not get meetings");
+                    }
+                });
+    }
+
+    private void buildActiveMeeting() {
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
