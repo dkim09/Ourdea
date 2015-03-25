@@ -12,8 +12,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -21,6 +24,8 @@ import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.dto.LabelDto;
 import com.ourdea.ourdea.dto.TaskDto;
+import com.ourdea.ourdea.fragments.DatePickerFragment;
+import com.ourdea.ourdea.fragments.TimePickerFragment;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.LabelResource;
 import com.ourdea.ourdea.resources.ProjectResource;
@@ -30,13 +35,19 @@ import com.ourdea.ourdea.resources.TaskResource;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
-public class AddEditTaskActivity extends Activity {
+public class AddEditTaskActivity extends Activity implements PickerResponse {
 
     private String taskId;
 
     private ArrayList<String> users;
+
+    private Calendar taskDueDateTime = Calendar.getInstance();
+
+    private String status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +58,6 @@ public class AddEditTaskActivity extends Activity {
         Intent intent = getIntent();
         taskId = intent.getStringExtra("taskId");
 
-        // Update title
-        if (taskId != null) {
-            setTitle("Edit Task");
-        }
-
         final Context context = this;
 
         // Get references to UI elements
@@ -59,8 +65,43 @@ public class AddEditTaskActivity extends Activity {
         final AutoCompleteTextView assigneeAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.assignee);
         final EditText name = (EditText) findViewById(R.id.name);
         final EditText description = (EditText) findViewById(R.id.description);
+        final EditText date = (EditText) findViewById(R.id.select_date);
+        final EditText time = (EditText) findViewById(R.id.select_time);
+        final Button saveTaskButton = (Button) findViewById(R.id.save_task);
 
-        //assigneeAutoCompleteTextView.setText("me");
+        // Update title and unhide save task button if we are editting a task
+        if (taskId != null) {
+            setTitle("Edit Task");
+            saveTaskButton.setVisibility(View.VISIBLE);
+        }
+
+        // Set listener on save task button
+        saveTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TaskDto taskToUpdate = new TaskDto(
+                        name.getText().toString(),
+                        description.getText().toString(),
+                        assigneeAutoCompleteTextView.getText().toString(),
+                        labelAutoCompleteTextView.getText().toString(),
+                        taskDueDateTime.getTimeInMillis(),
+                        status);
+
+                TaskResource.update(taskId, taskToUpdate, context, new Response.Listener() {
+                    @Override
+                    public void onResponse(Object response) {
+                        finish();
+                        Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(AddEditTaskActivity.this, "Task could not be saved", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
         // Set on click listener
         ImageView assignToMeImageView = (ImageView) findViewById(R.id.action_assign_to_me);
         assignToMeImageView.setOnClickListener(new View.OnClickListener() {
@@ -81,6 +122,11 @@ public class AddEditTaskActivity extends Activity {
                             assigneeAutoCompleteTextView.setText(task.getAssignedTo());
                             name.setText(task.getName());
                             description.setText(task.getDescription());
+                            taskDueDateTime.setTimeInMillis(task.getDueDate());
+                            setFormattedDateFromCalendar();
+                            setFormattedTimeFromCalendar();
+                            status = task.getStatus();
+
                             Log.d("SERVER_SUCCESS", "Task loaded");
                         }
                     },
@@ -266,7 +312,8 @@ public class AddEditTaskActivity extends Activity {
             final String assigneeValue = assigneeAutoCompleteTextView.getText().toString();
 
             if (taskId == null) {
-                TaskResource.create(nameValue, descriptionValue, labelValue, assigneeValue, context,
+                TaskDto newTask = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime.getTimeInMillis(), "todo");
+                TaskResource.create(newTask, context,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
@@ -282,7 +329,8 @@ public class AddEditTaskActivity extends Activity {
                             }
                         });
             } else {
-                TaskResource.update(taskId, nameValue, descriptionValue, labelValue, assigneeValue, context,
+                TaskDto taskToUpdate = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime.getTimeInMillis(), "todo");
+                TaskResource.update(taskId, taskToUpdate, context,
                         new Response.Listener() {
                             @Override
                             public void onResponse(Object response) {
@@ -301,5 +349,50 @@ public class AddEditTaskActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showDatePickerDialog(View v) {
+        DatePickerFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
+        newFragment.delegate = this;
+    }
+
+    public void showTimePickerDialog(View v) {
+        TimePickerFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
+        newFragment.delegate = this;
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int day) {
+        taskDueDateTime.set(Calendar.YEAR, year);
+        taskDueDateTime.set(Calendar.MONTH, month);
+        taskDueDateTime.set(Calendar.DAY_OF_MONTH, day);
+
+        setFormattedDateFromCalendar();
+    }
+
+    private void setFormattedDateFromCalendar() {
+        SimpleDateFormat formatter = new SimpleDateFormat("d/M/yyyy");
+        String formattedDateString = formatter.format(taskDueDateTime.getTime());
+
+        EditText editText = (EditText) findViewById(R.id.select_date);
+        editText.setText(formattedDateString);
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hour, int minute) {
+        taskDueDateTime.set(Calendar.HOUR_OF_DAY, hour);
+        taskDueDateTime.set(Calendar.MINUTE, minute);
+
+        setFormattedTimeFromCalendar();
+    }
+
+    private void setFormattedTimeFromCalendar() {
+        SimpleDateFormat formatter = new SimpleDateFormat("h:mm a");
+        String formattedTimeString = formatter.format(taskDueDateTime.getTime());
+
+        EditText editText = (EditText) findViewById(R.id.select_time);
+        editText.setText(formattedTimeString);
     }
 }

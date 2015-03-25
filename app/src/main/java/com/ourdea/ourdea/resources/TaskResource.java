@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.ourdea.ourdea.dto.TaskDto;
 import com.ourdea.ourdea.utilities.RequestQueueSingleton;
 
 import org.json.JSONObject;
@@ -46,13 +47,15 @@ public class TaskResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonArrayRequest);
     }
 
-    public static void create(final String name, final String description, final String label, final String assignedTo, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void create(TaskDto task, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
-            params.put("description", description);
-            params.put("name", name);
-            params.put("label", label);
-            params.put("assignedTo", assignedTo);
+            params.put("description", task.getDescription());
+            params.put("name", task.getName());
+            params.put("label", task.getLabel());
+            params.put("assignedTo", task.getAssignedTo());
+            params.put("status", task.getStatus());
+            params.put("dueDate", task.getDueDate());
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -69,13 +72,14 @@ public class TaskResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void update(final String taskId, final String name, final String description, final String label, final String assignedTo, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void update(final String taskId, TaskDto task, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {
-            params.put("description", description);
-            params.put("name", name);
-            params.put("label", label);
-            params.put("assignedTo", assignedTo);
+            params.put("description", task.getDescription());
+            params.put("name", task.getName());
+            params.put("label", task.getLabel());
+            params.put("assignedTo", task.getAssignedTo());
+            params.put("dueDate", task.getDueDate());
         } catch (Exception exception) { }
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest

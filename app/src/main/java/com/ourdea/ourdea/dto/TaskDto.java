@@ -6,13 +6,12 @@ public class TaskDto {
     private String label;
     private String description;
     private String assignedTo;
-    private Object dueDate;
+    private Long dueDate;
     private String id;
     private String name;
     private String status;
 
-    public TaskDto(String id, String name, String description, String assignedTo, String label, String dueDate, String status) {
-        this.id = id;
+    public TaskDto(String name, String description, String assignedTo, String label, Long dueDate, String status) {
         this.name = name;
         this.description = description;
         this.assignedTo = assignedTo;
@@ -28,7 +27,7 @@ public class TaskDto {
             this.description = jsonObject.getString("description");
             this.assignedTo = jsonObject.getJSONObject("assignedTo").getString("email");
             this.label = jsonObject.getJSONObject("label").getString("name");
-            this.dueDate = jsonObject.get("dueDate");
+            this.dueDate = jsonObject.getLong("dueDate");
             this.status = jsonObject.getString("status");
         } catch (Exception exception) {
 
@@ -55,7 +54,7 @@ public class TaskDto {
         return assignedTo;
     }
 
-    public Object getDueDate() {
+    public Long getDueDate() {
         return dueDate;
     }
 

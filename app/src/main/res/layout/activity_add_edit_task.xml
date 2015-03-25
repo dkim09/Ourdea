@@ -70,4 +70,49 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:id="@+id/picker_layout"
+        android:layout_below="@id/assignee_layout"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/label_autocomplete">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:focusableInTouchMode="false"
+            android:hint="Select date"
+            android:id="@+id/select_date"
+            android:inputType="date"
+            android:onClick="showDatePickerDialog" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:id="@+id/select_time"
+            android:focusableInTouchMode="false"
+            android:hint="Select time"
+            android:inputType="time"
+            android:onClick="showTimePickerDialog" />
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:visibility="invisible"
+        android:id="@+id/save_task"
+        android:layout_below="@id/picker_layout"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/assignee_layout" />
+
 </RelativeLayout>
