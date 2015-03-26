@@ -81,6 +81,14 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
         saveTaskButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (name.equals("")) {
+                    Toast.makeText(context, "Task needs a name", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (description.equals("")) {
+                    Toast.makeText(context, "Task needs a description", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 TaskDto taskToUpdate = new TaskDto(
                         name.getText().toString(),
                         description.getText().toString(),
@@ -322,6 +330,14 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
             final String descriptionValue = description.getText().toString();
             final String labelValue = labelAutoCompleteTextView.getText().toString();
             final String assigneeValue = assigneeAutoCompleteTextView.getText().toString();
+
+            if (nameValue.equals("")) {
+                Toast.makeText(this, "Task needs a name", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (descriptionValue.equals("")) {
+                Toast.makeText(this, "Task needs a description", Toast.LENGTH_SHORT).show();
+                return false;
+            }
 
             if (taskId == null) {
                 TaskDto newTask = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime, "todo");

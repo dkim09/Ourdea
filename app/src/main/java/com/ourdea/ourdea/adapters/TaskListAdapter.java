@@ -33,8 +33,10 @@ public class TaskListAdapter extends ArrayAdapter<TaskDto> {
         TextView taskDescription = (TextView) view.findViewById(R.id.task_description);
         taskDescription.setText(task.getDescription());
 
-        TextView taskLabel = (TextView) view.findViewById(R.id.task_label);
-        taskLabel.setText("#" + task.getLabel());
+        if (task.getLabel().equals("")) {
+            TextView taskLabel = (TextView) view.findViewById(R.id.task_label);
+            taskLabel.setText("#" + task.getLabel());
+        }
 
         return view;
     }
