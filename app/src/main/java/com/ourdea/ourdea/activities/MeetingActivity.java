@@ -1,5 +1,10 @@
 package com.ourdea.ourdea.activities;
 
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.android.volley.Response;
@@ -27,6 +35,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MeetingActivity extends DrawerActivity {
@@ -192,18 +201,65 @@ public class MeetingActivity extends DrawerActivity {
     }
 
     public void rejectMeeting(View view) {
-        MeetingResource.reject(activeMeeting.getId(), this, new Response.Listener() {
+        final Context context = this;
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Suggest new time and place");
+
+        final View dialogView = View.inflate(this, R.layout.dialog_reject_meeting, null);
+        final EditText message = (EditText) dialogView.findViewById(R.id.message);
+        builder.setView(dialogView);
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.setPositiveButton("Reject", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                final String rejectionMessage = message.getText().toString();
+                final MeetingDto newMeeting = new MeetingDto();
+                newMeeting.setId(activeMeeting.getId());
+
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int monthOfYear = calendar.get(Calendar.MONTH);
+                int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+                new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
-                    public void onResponse(Object response) {
-                        Toast.makeText(getApplicationContext(), "Meeting rejected!", Toast.LENGTH_SHORT).show();
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        calendar.set(Calendar.YEAR, year);
+                        calendar.set(Calendar.MONTH, monthOfYear);
+                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                        final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                        int minute = calendar.get(Calendar.MINUTE);
+                        new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                calendar.set(Calendar.MINUTE, minute);
+                                newMeeting.setTime(calendar.getTimeInMillis());
+
+                                MeetingResource.reject(newMeeting, rejectionMessage, context, new Response.Listener() {
+                                       @Override
+                                            public void onResponse(Object response) {
+                                                Toast.makeText(getApplicationContext(), "Meeting rejected!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        },
+                                        new Response.ErrorListener() {
+                                            @Override
+                                            public void onErrorResponse(VolleyError error) {
+                                                Toast.makeText(getApplicationContext(), "Meeting could not be rejected!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }, hour, minute, false).show();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(getApplicationContext(), "Meeting could not be accepted!", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }, year, monthOfYear, dayOfMonth).show();
+            }
+        }).show();
     }
 
     public void acceptMeeting(View view) {

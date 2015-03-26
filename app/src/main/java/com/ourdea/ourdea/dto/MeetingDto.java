@@ -27,6 +27,8 @@ public class MeetingDto {
 
     String owner;
 
+    public MeetingDto() {}
+
     public MeetingDto(JSONObject json) {
         try {
             this.id = json.getLong("meetingId");

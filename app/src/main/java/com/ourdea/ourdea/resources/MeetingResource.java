@@ -56,10 +56,15 @@ public class MeetingResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void reject(Long meetingId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void reject(MeetingDto newMeeting, String rejectionMessage, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
+        try {
+            params.put("message", rejectionMessage);
+            params.put("time", newMeeting.getTime());
+            params.put("location", newMeeting.getLocation());
+        } catch(Exception exception) { }
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/meeting/" + meetingId + "/reject", params, successResponse, errorResponse) {
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/meeting/" + newMeeting.getId() + "/reject", params, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
