@@ -33,6 +33,11 @@ public class ProjectActivity extends Activity {
         final EditText projectPass = (EditText) findViewById(R.id.join_project_password);
         final Button joinProjectButton = (Button) findViewById(R.id.join_project);
 
+        /*if (!ApiUtilities.Session.getProjectId(this).equals(ApiUtilities.Session.PROJECT_ID_MISSING)) {
+            Intent goMainScreen = new Intent(ProjectActivity.this, DashboardActivity.class);
+            startActivity(goMainScreen);
+        }*/
+
         joinProjectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

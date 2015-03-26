@@ -56,10 +56,9 @@ public class AddMeetingActivity extends Activity implements PickerResponse {
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, month);
-        calendar.set(Calendar.DAY_OF_MONTH, day);
+        meetingDue.set(Calendar.YEAR, year);
+        meetingDue.set(Calendar.MONTH, month);
+        meetingDue.set(Calendar.DAY_OF_MONTH, day);
 
         setFormattedDate();
     }

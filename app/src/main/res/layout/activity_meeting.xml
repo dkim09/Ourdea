@@ -3,86 +3,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:id="@+id/meeting_name" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:id="@+id/meeting_description" />
-
-        <GridLayout
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:rowCount="2"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:id="@+id/users"
-            android:columnCount="3">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_assign_to_me"
-                android:id="@+id/imageView"
-                android:layout_row="0"
-                android:layout_column="0" />
+            android:paddingBottom="@dimen/activity_vertical_margin">
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Bob\nbob@bob.com"
-                android:layout_row="0"
-                android:layout_column="1"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp" />
-
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_accept"
-                android:layout_row="0"
-                android:layout_column="2"
-                android:layout_gravity="right" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_assign_to_me"
-                android:layout_row="1"
-                android:layout_column="0" />
+                android:text="Active Meeting Request"
+                android:id="@+id/meeting_active"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
 
             <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="Joe\njoe@joe.com"
-                android:layout_row="1"
-                android:layout_column="1"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp" />
-
-            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_reject"
-                android:layout_row="1"
-                android:layout_column="2"
-                android:layout_gravity="right" />
-        </GridLayout>
+                android:text="None"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/meeting_not_active"
+                android:visibility="gone"/>
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/meeting_name"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:id="@+id/meeting_description"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:id="@+id/meeting_location_time"
+                android:visibility="gone"/>
+
+            <GridLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:rowCount="2"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:id="@+id/users"
+                android:columnCount="3">
+
+            </GridLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/accept_meeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accept"
+                    android:onClick="acceptMeeting"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/reject_meeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reject"
+                    android:onClick="rejectMeeting"
+                    android:visibility="gone"/>
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Upcoming Meetings"
+                android:id="@+id/meeting_upcoming"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:id="@+id/meeting_not_upcoming"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </ScrollView>
 
     <ListView android:id="@+id/left_drawer"
         android:layout_width="240dp"

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class MeetingDto {
 
+    Long id;
+
     String name;
 
     String description;
@@ -23,21 +25,25 @@ public class MeetingDto {
 
     Long project;
 
+    String owner;
+
     public MeetingDto(JSONObject json) {
         try {
+            this.id = json.getLong("meetingId");
             this.name = json.getString("name");
             this.description = json.getString("description");
             this.location = json.getString("location");
             this.time = json.getLong("time");
             this.active = json.getBoolean("active");
             this.agreements = new ArrayList<>();
+            this.owner = json.getJSONObject("owner").getString("email");
             this.project = json.getJSONObject("project").getLong("projectId");
 
             JSONArray agreementsJSON = json.getJSONArray("agreements");
             for (int a = 0; a < agreementsJSON.length(); a++) {
                 JSONObject agreement = agreementsJSON.getJSONObject(0);
 
-                this.agreements.add(agreement.getString("name") + "\n" + agreement.getString("email"));
+                this.agreements.add(agreement.getString("email"));
             }
         } catch (Exception exception) {
             Log.d("JSON_ERROR", "Error parsing MeetingJSON into MeetingDto");
@@ -54,6 +60,14 @@ public class MeetingDto {
 
     public Long getProject() {
         return project;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 
     public void setProject(Long project) {
@@ -102,6 +116,14 @@ public class MeetingDto {
 
     public Boolean getActive() {
         return active;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setActive(Boolean active) {

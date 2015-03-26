@@ -72,9 +72,9 @@ public class MeetingResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void getAll(Long project, String status, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void getAll(String status, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (ApiUtilities.SERVER_ADDRESS + "/project/" + project + "/meeting/all/" + status, successResponse, errorResponse) {
+                (ApiUtilities.SERVER_ADDRESS + "/project/" + ApiUtilities.Session.getProjectId(context) + "/meeting/all/" + status, successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();
