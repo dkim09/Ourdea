@@ -1,6 +1,7 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,10 +9,16 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.dto.MeetingDto;
 import com.ourdea.ourdea.fragments.DatePickerFragment;
 import com.ourdea.ourdea.fragments.TimePickerFragment;
+import com.ourdea.ourdea.resources.ApiUtilities;
+import com.ourdea.ourdea.resources.MeetingResource;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -24,6 +31,8 @@ public class AddMeetingActivity extends Activity implements PickerResponse {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_meeting);
+        setFormattedDate();
+        setFormattedTime();
     }
 
     @Override
@@ -84,6 +93,37 @@ public class AddMeetingActivity extends Activity implements PickerResponse {
         int id = item.getItemId();
 
         if (id == R.id.action_save_meeting) {
+            final Context context = this;
+            // Get references
+            String meetingName = ((EditText) findViewById(R.id.name)).getText().toString();
+            String meetingDescription = ((EditText) findViewById(R.id.description)).getText().toString();
+            String meetingLocation = ((EditText) findViewById(R.id.location)).getText().toString();
+
+            if (meetingName.equals("")) {
+                Toast.makeText(context, "Meeting needs a name", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (meetingDescription.equals("")) {
+                Toast.makeText(context, "Meeting needs a description", Toast.LENGTH_SHORT).show();
+                return false;
+            } else if (meetingLocation.equals("")) {
+                Toast.makeText(context, "Meeting needs a location", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            MeetingDto meeting = new MeetingDto(meetingName, meetingDescription, meetingDue.getTimeInMillis(), meetingLocation, ApiUtilities.Session.getProjectId(this));
+            MeetingResource.create(meeting, this, new Response.Listener() {
+                @Override
+                public void onResponse(Object response) {
+                    Toast.makeText(context, "Meeting requested!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(context, "Could not create meeting request (is there one already active?)", Toast.LENGTH_SHORT).show();
+                }
+            });
+
             return true;
         }
 
