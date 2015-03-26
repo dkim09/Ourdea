@@ -65,6 +65,14 @@
                 android:value="com.ourdea.ourdea.activities.DashboardActivity" />
         </activity>
         <activity
+            android:name=".activities.AddMeetingActivity"
+            android:label="@string/title_activity_add_meeting"
+            android:parentActivityName=".activities.MeetingActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ourdea.ourdea.activities.MeetingActivity" />
+        </activity>
+        <activity
             android:name=".activities.LoginActivity"
             android:label="Ourdea" >
             <intent-filter>

@@ -40,6 +40,38 @@ public class MeetingResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
+    public static void accept(Long meetingId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JSONObject params = new JSONObject();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/meeting/" + meetingId + "/accept", params, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
+
+    public static void reject(Long meetingId, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JSONObject params = new JSONObject();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, ApiUtilities.SERVER_ADDRESS + "/meeting/" + meetingId + "/reject", params, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
+
     public static void getAll(Long project, String status, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
                 (ApiUtilities.SERVER_ADDRESS + "/project/" + project + "/meeting/all/" + status, successResponse, errorResponse) {

@@ -1,10 +1,12 @@
 package com.ourdea.ourdea.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.GridLayout;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -19,6 +21,8 @@ public class MeetingActivity extends DrawerActivity {
 
     private GridLayout gridLayout;
     private MeetingDto meeting;
+
+    private boolean activeMeetingExists = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,7 @@ public class MeetingActivity extends DrawerActivity {
                     public void onResponse(JSONArray response) {
                         // We'll assume at most one meeting right now
                         try {
+                            activeMeetingExists = true;
                             meeting = new MeetingDto(response.getJSONObject(0));
                             buildActiveMeeting();
                         } catch (Exception exception) {
@@ -74,6 +79,13 @@ public class MeetingActivity extends DrawerActivity {
         if (id == R.id.action_settings) {
             return true;
         } else if (id == R.id.action_add_meeting) {
+            if (activeMeetingExists) {
+                Toast.makeText(this, "Meeting already being requested", Toast.LENGTH_SHORT);
+            } else {
+                Intent addMeetingActivity = new Intent(this, AddMeetingActivity.class);
+                startActivity(addMeetingActivity);
+            }
+
             return true;
         }
 
