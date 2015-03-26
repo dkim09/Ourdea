@@ -56,7 +56,10 @@ public class MeetingActivity extends DrawerActivity {
     @Override
     public void onResume() {
         super.onResume();
+        loadActiveMeeting();
+    }
 
+    private void loadActiveMeeting() {
         loadingMeetingInformation = true;
         MeetingResource.getAll("active", this,
                 new Response.Listener<JSONArray>() {
@@ -95,11 +98,16 @@ public class MeetingActivity extends DrawerActivity {
         TextView meetingLocationTimeTextView = (TextView) findViewById(R.id.meeting_location_time);
         Button acceptMeetingButton = (Button) findViewById(R.id.accept_meeting);
         Button rejectMeetingButton = (Button) findViewById(R.id.reject_meeting);
+        final GridLayout usersGridLayout = (GridLayout) findViewById(R.id.users);
 
         // Reset UI
+        meetingNameTextView.setVisibility(View.GONE);
+        meetingDescriptionTextView.setVisibility(View.GONE);
+        meetingLocationTimeTextView.setVisibility(View.GONE);
         acceptMeetingButton.setVisibility(View.GONE);
         rejectMeetingButton.setVisibility(View.GONE);
         meetingActiveEmptyStateTextView.setVisibility(View.GONE);
+        usersGridLayout.setVisibility(View.GONE);
 
         if (activeMeetingExists) {
             final List<String> activeMeetingAgreements = activeMeeting.getAgreements();
@@ -112,6 +120,12 @@ public class MeetingActivity extends DrawerActivity {
                 acceptMeetingButton.setVisibility(View.VISIBLE);
                 rejectMeetingButton.setVisibility(View.VISIBLE);
             }
+
+            // Re-enable some other uI StUFF
+            meetingNameTextView.setVisibility(View.VISIBLE);
+            meetingDescriptionTextView.setVisibility(View.VISIBLE);
+            meetingLocationTimeTextView.setVisibility(View.VISIBLE);
+            usersGridLayout.setVisibility(View.VISIBLE);
 
             meetingNameTextView.setText(activeMeeting.getName());
             meetingDescriptionTextView.setText(activeMeeting.getDescription());
@@ -144,7 +158,6 @@ public class MeetingActivity extends DrawerActivity {
                             } catch (Exception exception) {
                             }
 
-                            GridLayout usersGridLayout = (GridLayout) findViewById(R.id.users);
                             usersGridLayout.setRowCount(users.size());
                             usersGridLayout.setColumnCount(3);
 
@@ -164,7 +177,11 @@ public class MeetingActivity extends DrawerActivity {
                                 gridLayoutParam = new GridLayout.LayoutParams(row, col);
 
                                 TextView nameCell = (TextView) getLayoutInflater().inflate(R.layout.grid_cell_person_name, null);
-                                nameCell.setText(user.getName() + "\n" + user.getEmail());
+                                if (user.getEmail().equals(ApiUtilities.Session.getEmail(getApplicationContext()))) {
+                                    nameCell.setText(user.getName() + " (You)" + "\n" + user.getEmail());
+                                } else {
+                                    nameCell.setText(user.getName() + "\n" + user.getEmail());
+                                }
                                 usersGridLayout.addView(nameCell, gridLayoutParam);
 
                                 // Column 3: Acceptance/Rejection Icon
@@ -207,6 +224,8 @@ public class MeetingActivity extends DrawerActivity {
 
         final View dialogView = View.inflate(this, R.layout.dialog_reject_meeting, null);
         final EditText message = (EditText) dialogView.findViewById(R.id.message);
+        final EditText location = (EditText) dialogView.findViewById(R.id.location);
+        location.setText(activeMeeting.getLocation());
         builder.setView(dialogView);
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -220,6 +239,7 @@ public class MeetingActivity extends DrawerActivity {
                 final String rejectionMessage = message.getText().toString();
                 final MeetingDto newMeeting = new MeetingDto();
                 newMeeting.setId(activeMeeting.getId());
+                newMeeting.setLocation(location.getText().toString());
 
                 final Calendar calendar = Calendar.getInstance();
                 int year = calendar.get(Calendar.YEAR);
@@ -267,6 +287,7 @@ public class MeetingActivity extends DrawerActivity {
             @Override
             public void onResponse(Object response) {
                 Toast.makeText(getApplicationContext(), "Meeting accepted!", Toast.LENGTH_SHORT).show();
+                loadActiveMeeting();
             }
         },
         new Response.ErrorListener() {

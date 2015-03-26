@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="If you would like to reject this meeting, you must suggest a new time and place and provide a message for why you are rejection it."/>
+        android:text="If you would like to reject this meeting, you must provide a message for why you are rejecting it, as well as suggest a new location and date and time."/>
 
     <EditText
         android:layout_width="fill_parent"
@@ -18,4 +18,11 @@
         android:hint="Rejection Message"
         android:textColor="@android:color/black"
         android:id="@+id/message"/>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:hint="New Locaton"
+        android:textColor="@android:color/black"
+        android:id="@+id/location"/>
 </LinearLayout>
