@@ -94,21 +94,21 @@ public class DrawerActivity extends Activity {
                 return;
             }
 
-            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
             switch (drawerItem) {
                 case "Tasks":
-                    intent = new Intent(getApplicationContext(), TaskActivity.class);
+                    startActivity(new Intent(getApplicationContext(), TaskActivity.class));
                     break;
                 case "Dashboard":
+                    startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                     break;
                 case "Chat":
-                    intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    startActivity(new Intent(getApplicationContext(), ChatActivity.class));
                     break;
                 case "Meetings":
-                    intent = new Intent(getApplicationContext(), MeetingActivity.class);
+                    startActivity(new Intent(getApplicationContext(), MeetingActivity.class));
                     break;
                 case "Map":
-                    intent = new Intent(getApplicationContext(), MapActivity.class);
+                    startActivity(new Intent(getApplicationContext(), MapActivity.class));
                     break;
                 case "Logout":
                     UserResource.logout(getApplicationContext(), new Response.Listener() {
@@ -126,9 +126,8 @@ public class DrawerActivity extends Activity {
                             Toast.makeText(getApplicationContext(), "Could not logout!", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    break;
             }
-
-            startActivity(intent);
         }
     }
 
