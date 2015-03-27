@@ -1,7 +1,6 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -75,8 +74,6 @@ public class LoginActivity extends Activity {
 
                 UserDto user = new UserDto(email, password);
 
-                final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", false, false);
-
                 UserResource.login(user, getApplicationContext(),
                         new Response.Listener<JSONObject>() {
                             @Override
@@ -91,9 +88,7 @@ public class LoginActivity extends Activity {
                                     ApiUtilities.Session.storePassword(password, LoginActivity.this);
                                     ApiUtilities.Session.storeName(name, LoginActivity.this);
 
-                                    progressDialog.dismiss();
-
-                                    Intent goMainScreen = new Intent(LoginActivity.this, ProjectActivity.class);
+                                    Intent goMainScreen = new Intent(LoginActivity.this, ProjectListActivity.class);
                                     startActivity(goMainScreen);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -103,7 +98,6 @@ public class LoginActivity extends Activity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                progressDialog.dismiss();
                                 Log.d("TESTING", "error: " + error.getMessage());
                                 Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
                             }

@@ -111,6 +111,9 @@ public class DrawerActivity extends Activity {
                 case "Map":
                     startActivity(new Intent(getApplicationContext(), MapActivity.class));
                     break;
+                case "Switch Project":
+                    startActivity(new Intent(getApplicationContext(), ProjectListActivity.class));
+                    break;
                 case "Logout":
                     final ProgressDialog progressDialog = ProgressDialog.show(DrawerActivity.this, "", "Logging out...", false, false);
 

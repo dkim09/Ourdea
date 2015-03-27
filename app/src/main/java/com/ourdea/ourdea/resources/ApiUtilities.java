@@ -5,8 +5,14 @@ import android.content.SharedPreferences;
 
 public class ApiUtilities {
 
+<<<<<<< Updated upstream
     //final static public String SERVER_ADDRESS = "http://52.10.50.18:9000"; // AWS server
     final static public String SERVER_ADDRESS = "http://192.168.1.73:9000"; // Personal server
+=======
+    final static public String SERVER_ADDRESS = "http://52.10.50.18:9000"; // AWS server
+    //final static public String SERVER_ADDRESS = "http://57187c16.ngrok.com"; // Daniel server
+    //final static public String SERVER_ADDRESS = "http://7bc30190.ngrok.com"; // Filip server
+>>>>>>> Stashed changes
 
     public static class Session {
 
