@@ -266,6 +266,7 @@ public class MeetingActivity extends DrawerActivity {
                                        @Override
                                             public void onResponse(Object response) {
                                                 Toast.makeText(getApplicationContext(), "Meeting rejected!", Toast.LENGTH_SHORT).show();
+                                                loadActiveMeeting();
                                             }
                                         },
                                         new Response.ErrorListener() {
