@@ -1,0 +1,104 @@
+<html>
+<head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+     function parseLabels(type, stringArray){
+        var array = [];
+        array.push(type);
+        array = array.concat(stringArray.split(","));
+        return array;
+     }
+
+     function parseLabelVals(type, stringArray){
+        var array = [];
+        array.push(type);
+        array = array.concat(stringArray.split(",").map(Number));
+        return array;
+     }
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart', 'bar']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+      function drawChart() {
+
+
+      var projectData = new google.visualization.DataTable();
+      projectData.addColumn('string', 'ITEM');
+      projectData.addColumn('number', 'VALUE');
+      projectData.addRows([
+        ['In Progress', Android.getNumInProgressTasks()],
+        ['Done', Android.getNumDoneTasks()],
+        ['To Do', Android.getNumToDoTasks()],
+      ]);
+
+      var myTasksData = new google.visualization.DataTable();
+      myTasksData.addColumn('string', 'ITEM');
+      myTasksData.addColumn('number', 'VALUE');
+      myTasksData.addRows([
+        ['In Progress', Android.getNumMyInProgressTasks()],
+        ['Done', Android.getNumMyDoneTasks()],
+        ['To Do', Android.getNumMyToDoTasks()],
+      ]);
+
+      var labelData = google.visualization.arrayToDataTable([
+        parseLabels("Status",Android.getLabels()),
+        parseLabelVals("ToDo", Android.getToDoLabels()),
+        parseLabelVals("InProgress", Android.getInProgressLabels()),
+        parseLabelVals("Done",Android.getDoneLabels())
+      ]);
+
+      // Set chart options
+      var options = {'title':'Project Status',
+                     'titleTextStyle': {color: 'red', fontName: 'Arial', fontSize: '70', fontWidth: 'normal'},
+                     'width':1200,
+                     'height':1200,
+                     'fontSize': 40,
+                     'pieSliceText': 'value'};
+
+      var myOptions = {'title':'My Tasks Status',
+                     'titleTextStyle': {color: 'red', fontName: 'Arial', fontSize: '70', fontWidth: 'normal'},
+                     'width':1200,
+                     'height':1200,
+                     'fontSize': 40,
+                     'pieSliceText': 'value'};
+
+
+        var labelOptions = {
+            chart:{
+                'title':'Project Status by Labels',
+                'titleTextStyle': {color: 'red', fontName: 'Arial', fontSize: '70', fontWidth: 'normal'},
+                'fontSize': 50
+            }
+        };
+
+
+        //var labelDataView = new google.visualization.DataView(labelData);
+        //labelDataView.setColumns([{calc: function(data, row) { return data.getFormattedValue(row, 0); }, type:'string'}, 1]);
+
+      // Instantiate and draw our chart, passing in some options.
+      var projectChart = new google.visualization.PieChart(document.getElementById('project_chart_div'));
+      projectChart.draw(projectData, options);
+      var myTasksChart = new google.visualization.PieChart(document.getElementById('my_tasks_chart_div'));
+      myTasksChart.draw(myTasksData, myOptions);
+      var labelChart = new google.charts.Bar(document.getElementById('labels_char_div'));
+      labelChart.draw(labelData, labelOptions);
+    }
+    </script>
+</head>
+
+<body>
+<!--Div that will hold the pie chart-->
+<div id="project_chart_div" style="width:1200; height:1200"></div>
+<div id="my_tasks_chart_div" style="width:1200; height:1200"></div>
+<div id ="labels_char_div"  style="width:1200; height:1200"></div>
+</body>
+</html>

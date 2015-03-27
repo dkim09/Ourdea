@@ -28,6 +28,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
+        <WebView
+            android:id="@+id/web"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/dash_title"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/numInProgressEditText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:inputType="textPersonName"
+            android:layout_toEndOf="@+id/web" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:id="@+id/numToDoEditText"
+            android:layout_below="@+id/numDoneEditText"
+            android:layout_alignStart="@+id/numDoneEditText"
+            android:layout_alignEnd="@+id/numDoneEditText" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:id="@+id/numDoneEditText"
+            android:layout_below="@+id/dash_subtitle"
+            android:layout_alignStart="@+id/numInProgressEditText"
+            android:layout_alignEnd="@+id/numInProgressEditText" />
     </RelativeLayout>
 
     <ListView android:id="@+id/left_drawer"
