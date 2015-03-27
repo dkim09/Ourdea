@@ -13,6 +13,8 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.adapters.MeetingListAdapter;
 import com.ourdea.ourdea.dto.MeetingDto;
 import com.ourdea.ourdea.dto.UserDto;
 import com.ourdea.ourdea.resources.ApiUtilities;
@@ -47,17 +50,78 @@ public class MeetingActivity extends DrawerActivity {
 
     private boolean activeMeetingExists = false;
 
+    private List<MeetingDto> upcomingMeetings;
+
+    private TextView meetingActiveEmptyStateTextView;
+    private TextView meetingNameTextView;
+    private TextView meetingDescriptionTextView;
+    private TextView meetingLocationTimeTextView;
+    private Button acceptMeetingButton;
+    private Button rejectMeetingButton;
+    private GridLayout usersGridLayout;
+    private AbsListView upcomingMeetingsListView;
+
+    private MeetingListAdapter meetingListAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_meeting);
         super.onCreate(savedInstanceState);
         this.setActivity("Meetings");
+
+        // Get references
+        meetingActiveEmptyStateTextView = (TextView) findViewById(R.id.meeting_not_active);
+        meetingNameTextView = (TextView) findViewById(R.id.meeting_name);
+        meetingDescriptionTextView = (TextView) findViewById(R.id.meeting_description);
+        meetingLocationTimeTextView = (TextView) findViewById(R.id.meeting_location_time);
+        acceptMeetingButton = (Button) findViewById(R.id.accept_meeting);
+        rejectMeetingButton = (Button) findViewById(R.id.reject_meeting);
+        usersGridLayout = (GridLayout) findViewById(R.id.users);
+        upcomingMeetingsListView = (AbsListView) findViewById(R.id.upcoming_meetings_list);
+
+        // Set up
+        meetingListAdapter = new MeetingListAdapter(this);
+        upcomingMeetingsListView.setAdapter(meetingListAdapter);
+        upcomingMeetingsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MeetingDto clickedMeeting = upcomingMeetings.get(position);
+                AlertDialog.Builder builder = new AlertDialog.Builder(MeetingActivity.this);
+                builder.setTitle(clickedMeeting.getName());
+                builder.setMessage("Description: " + clickedMeeting.getDescription() +
+                        "\n" + "Location: " + clickedMeeting.getLocation() +
+                        "\n" + "Time: " + new SimpleDateFormat("d/M/yyyy h:mm a").format(clickedMeeting.getTime()));
+                builder .show();
+            }
+        });
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        loadMeetings();
+    }
+
+    private void loadMeetings() {
         loadActiveMeeting();
+        loadUpcomingMeetings();
+    }
+
+    private void loadUpcomingMeetings() {
+        MeetingResource.getAll("upcoming", this,
+            new Response.Listener<JSONArray>() {
+                @Override
+                public void onResponse(JSONArray response) {
+                    upcomingMeetings = MeetingDto.getAllFromJSONArray(response);
+                    buildListOfUpcomingMeetings();
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d("SERVER_ERROR", "Could not get upcming meetings");
+                }
+            });
     }
 
     private void loadActiveMeeting() {
@@ -91,16 +155,13 @@ public class MeetingActivity extends DrawerActivity {
                 });
     }
 
-    private void buildActiveMeeting() {
-        // Get references
-        TextView meetingActiveEmptyStateTextView = (TextView) findViewById(R.id.meeting_not_active);
-        TextView meetingNameTextView = (TextView) findViewById(R.id.meeting_name);
-        TextView meetingDescriptionTextView = (TextView) findViewById(R.id.meeting_description);
-        TextView meetingLocationTimeTextView = (TextView) findViewById(R.id.meeting_location_time);
-        Button acceptMeetingButton = (Button) findViewById(R.id.accept_meeting);
-        Button rejectMeetingButton = (Button) findViewById(R.id.reject_meeting);
-        final GridLayout usersGridLayout = (GridLayout) findViewById(R.id.users);
+    private void buildListOfUpcomingMeetings() {
+        meetingListAdapter.clear();
+        meetingListAdapter.addAll(upcomingMeetings);
+        meetingListAdapter.notifyDataSetChanged();
+    }
 
+    private void buildActiveMeeting() {
         // Reset UI
         meetingNameTextView.setVisibility(View.GONE);
         meetingDescriptionTextView.setVisibility(View.GONE);
