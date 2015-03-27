@@ -121,7 +121,7 @@
     </ScrollView>
 
     <ListView android:id="@+id/left_drawer"
-        android:paddingRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
