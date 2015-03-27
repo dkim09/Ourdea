@@ -108,6 +108,7 @@ public class MeetingActivity extends DrawerActivity {
         rejectMeetingButton.setVisibility(View.GONE);
         meetingActiveEmptyStateTextView.setVisibility(View.GONE);
         usersGridLayout.setVisibility(View.GONE);
+        usersGridLayout.removeAllViews();
 
         if (activeMeetingExists) {
             final List<String> activeMeetingAgreements = activeMeeting.getAgreements();
