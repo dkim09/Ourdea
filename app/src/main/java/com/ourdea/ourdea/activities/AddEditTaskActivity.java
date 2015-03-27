@@ -32,6 +32,7 @@ import com.ourdea.ourdea.resources.LabelResource;
 import com.ourdea.ourdea.resources.ProjectResource;
 import com.ourdea.ourdea.resources.TagResource;
 import com.ourdea.ourdea.resources.TaskResource;
+import com.ourdea.ourdea.utilities.LoadingSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,6 +53,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
     private String status;
 
+    LoadingSpinner loadingSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +65,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
         taskId = intent.getStringExtra("taskId");
 
         final Context context = this;
+        loadingSpinner = new LoadingSpinner(findViewById(R.id.loading));
 
         // Get references to UI elements
         final AutoCompleteTextView labelAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.label_autocomplete);
@@ -76,6 +80,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
         if (taskId != null) {
             setTitle("Edit Task");
             saveTaskButton.setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.container).setVisibility(View.VISIBLE);
         }
 
         // Set listener on save task button
@@ -127,6 +133,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
         // Load task if needed
         if (taskId != null) {
+            loadingSpinner.show();
             TaskResource.get(taskId, context,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -140,6 +147,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                             setFormattedDateFromCalendar();
                             setFormattedTimeFromCalendar();
                             status = task.getStatus();
+                            loadingSpinner.hide();
+                            findViewById(R.id.container).setVisibility(View.VISIBLE);
 
                             Log.d("SERVER_SUCCESS", "Task loaded");
                         }
