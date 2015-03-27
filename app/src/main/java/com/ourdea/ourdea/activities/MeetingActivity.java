@@ -2,6 +2,7 @@ package com.ourdea.ourdea.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -194,7 +195,7 @@ public class MeetingActivity extends DrawerActivity {
                                 if (activeMeetingAgreements.indexOf(user.getEmail()) != -1) {
                                     replyCell.setImageResource(R.drawable.ic_accept);
                                 } else {
-                                    replyCell.setImageResource(R.drawable.ic_reject);
+                                    replyCell.setImageResource(R.drawable.ic_action_help);
                                 }
                                 usersGridLayout.addView(replyCell, gridLayoutParam);
 
@@ -263,16 +264,20 @@ public class MeetingActivity extends DrawerActivity {
                                 calendar.set(Calendar.MINUTE, minute);
                                 newMeeting.setTime(calendar.getTimeInMillis());
 
+                                final ProgressDialog progressDialog = ProgressDialog.show(MeetingActivity.this, "", "Rejecting meeting...", false, false);
+
                                 MeetingResource.reject(newMeeting, rejectionMessage, context, new Response.Listener() {
                                        @Override
                                             public void onResponse(Object response) {
                                                 Toast.makeText(getApplicationContext(), "Meeting rejected!", Toast.LENGTH_SHORT).show();
+                                                progressDialog.dismiss();
                                                 loadActiveMeeting();
                                             }
                                         },
                                         new Response.ErrorListener() {
                                             @Override
                                             public void onErrorResponse(VolleyError error) {
+                                                progressDialog.dismiss();
                                                 Toast.makeText(getApplicationContext(), "Meeting could not be rejected!", Toast.LENGTH_SHORT).show();
                                             }
                                         });
@@ -285,9 +290,12 @@ public class MeetingActivity extends DrawerActivity {
     }
 
     public void acceptMeeting(View view) {
+        final ProgressDialog progressDialog = ProgressDialog.show(MeetingActivity.this, "", "Accepting meeting...", false, false);
+
         MeetingResource.accept(activeMeeting.getId(), this, new Response.Listener() {
             @Override
             public void onResponse(Object response) {
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Meeting accepted!", Toast.LENGTH_SHORT).show();
                 loadActiveMeeting();
             }
@@ -295,6 +303,7 @@ public class MeetingActivity extends DrawerActivity {
         new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Meeting could not be accepted!", Toast.LENGTH_SHORT).show();
             }
         });

@@ -43,7 +43,7 @@ public class MeetingDto {
 
             JSONArray agreementsJSON = json.getJSONArray("agreements");
             for (int a = 0; a < agreementsJSON.length(); a++) {
-                JSONObject agreement = agreementsJSON.getJSONObject(0);
+                JSONObject agreement = agreementsJSON.getJSONObject(a);
 
                 this.agreements.add(agreement.getString("email"));
             }

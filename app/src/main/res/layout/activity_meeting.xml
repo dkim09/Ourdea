@@ -3,7 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ProgressBar
+        android:id="@+id/loading"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150dp"
+        android:layout_marginRight="150dp"
+        android:layout_width="wrap_content"/>
+
     <ScrollView
+        android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -102,6 +111,11 @@
                 android:text="None"
                 android:id="@+id/meeting_not_upcoming"
                 android:visibility="gone"/>
+
+            <ListView
+                android:id="@+id/upcoming_meetings_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
     </ScrollView>
