@@ -37,8 +37,16 @@ public class ProjectActivity extends Activity {
         joinProjectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    final String idValue = projectId.getText().toString();
-                    final String passValue = projectPass.getText().toString();
+                final String idValue = projectId.getText().toString();
+                final String passValue = projectPass.getText().toString();
+
+                if (idValue.equals("")) {
+                    Toast.makeText(ProjectActivity.this, "ID cannot be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (passValue.equals("")) {
+                    Toast.makeText(ProjectActivity.this, "Password cannot be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 final ProgressDialog progressDialog = ProgressDialog.show(ProjectActivity.this, "", "Joining project...", false, false);
                 ProjectResource.join(idValue, passValue, 0, 0, context,
