@@ -112,8 +112,7 @@ public class DrawerActivity extends Activity {
                     startActivity(new Intent(getApplicationContext(), MapActivity.class));
                     break;
                 case "Logout":
-                    final ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-                    progressDialog.show(DrawerActivity.this, "", "Logging out...", false, false);
+                    final ProgressDialog progressDialog = ProgressDialog.show(DrawerActivity.this, "", "Logging out...", false, false);
 
                     UserResource.logout(getApplicationContext(), new Response.Listener() {
                         @Override

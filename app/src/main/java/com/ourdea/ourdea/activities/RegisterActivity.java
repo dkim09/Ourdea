@@ -1,6 +1,7 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ public class RegisterActivity extends Activity {
     protected EditText mPassword;
     protected Button mRegisterButton;
     protected Context mContext;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -39,10 +41,12 @@ public class RegisterActivity extends Activity {
         mPassword = (EditText)findViewById(R.id.passwordRegisterEditText);
         mRegisterButton = (Button)findViewById(R.id.registerButton);
         mContext = this;
+        progressDialog = new ProgressDialog(RegisterActivity.this);
 
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressDialog = ProgressDialog.show(RegisterActivity.this, "", "Creating new user...", false, false);
                 String email = mEmail.getText().toString().trim();
                 String name =  mUsername.getText().toString().trim();
                 String password =  mPassword.getText().toString().trim();
@@ -75,6 +79,8 @@ public class RegisterActivity extends Activity {
                                 ApiUtilities.Session.storeEmail(email, getApplicationContext());
                                 ApiUtilities.Session.storePassword(password, getApplicationContext());
 
+                                progressDialog.dismiss();
+
                                 Intent goLoginScreen = new Intent(RegisterActivity.this, LoginActivity.class);
                                 startActivity(goLoginScreen);
                             }
@@ -82,6 +88,7 @@ public class RegisterActivity extends Activity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
                                 Log.d("TESTING", "error: " + error.getMessage());
                                 Toast.makeText(RegisterActivity.this, "Email already exists", Toast.LENGTH_LONG).show();
                             }
