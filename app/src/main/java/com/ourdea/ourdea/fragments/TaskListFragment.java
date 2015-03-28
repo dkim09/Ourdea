@@ -3,6 +3,7 @@ package com.ourdea.ourdea.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import com.ourdea.ourdea.activities.TaskActivity;
 import com.ourdea.ourdea.adapters.TaskListAdapter;
 import com.ourdea.ourdea.dto.TaskDto;
 import com.ourdea.ourdea.resources.TaskResource;
+import com.ourdea.ourdea.utilities.LoadingSpinner;
 
 import org.json.JSONArray;
 
@@ -40,6 +42,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
     private ArrayAdapter<TaskDto> mAdapter;
 
     private TaskListContent taskListContent;
+
+    private LoadingSpinner loadingSpinner;
 
     public static TaskListFragment newInstance(String position) {
         TaskListFragment fragment = new TaskListFragment();
@@ -79,6 +83,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                 break;
         }
 
+        loadingSpinner.show();
         TaskResource.getAll(taskListType, this.getActivity(),
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -86,11 +91,13 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                         Log.d("SERVER_SUCCESS", "Task list retrieved");
                         taskListContent = new TaskListContent(response);
                         buildTaskList();
+                        loadingSpinner.hide();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        loadingSpinner.hide();
                         Log.d("SERVER_ERROR", "Task list cannot be retrieved");
                     }
                 });
@@ -119,7 +126,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         mListView.setAdapter(mAdapter);
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
-        //mListView.setEmptyView(view.findViewById(android.R.id.empty));
+
+       loadingSpinner = new LoadingSpinner(view.findViewById(R.id.loading));
 
         return view;
     }
@@ -192,6 +200,8 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 final TaskActivity taskActivity = (TaskActivity) getActivity();
+                final ProgressDialog progressDialog = ProgressDialog.show(taskActivity, "", "Updating task...", false, false);
+
                 switch (which) {
                     case 0:
                         if (taskStatus.equals("completed") || taskStatus.equals("todo")) {
@@ -201,11 +211,13 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                     Toast.makeText(getActivity(), "Task in progress", Toast.LENGTH_SHORT).show();
                                     taskActivity.getViewPager().setCurrentItem(2);
                                     mListView.setAdapter(mAdapter);
+                                    progressDialog.dismiss();
 
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getActivity(), "Task could not be moved to in progress", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -216,10 +228,12 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                     taskActivity.getViewPager().setCurrentItem(3);
                                     mListView.setAdapter(mAdapter);
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getActivity(), "Task could not be moved to completed", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -233,10 +247,12 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                     Toast.makeText(getActivity(), "Task marked to do", Toast.LENGTH_SHORT).show();
                                     taskActivity.getViewPager().setCurrentItem(1);
                                     mListView.setAdapter(mAdapter);
+                                    progressDialog.dismiss();
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getActivity(), "Task could not be moved to 'to do'", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -247,10 +263,12 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                     Toast.makeText(getActivity(), "Task completed", Toast.LENGTH_SHORT).show();
                                     taskActivity.getViewPager().setCurrentItem(3);
                                     mListView.setAdapter(mAdapter);
+                                    progressDialog.dismiss();
                                 }
                             }, new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getActivity(), "Task could not be moved to completed", Toast.LENGTH_SHORT).show();
                                 }
                             });
@@ -260,6 +278,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                         TaskResource.delete(taskDto.getId(), getActivity(), new Response.Listener() {
                                     @Override
                                     public void onResponse(Object response) {
+                                        progressDialog.dismiss();
                                         Toast.makeText(getActivity(), "Task deleted", Toast.LENGTH_SHORT).show();
                                         loadTasks(Integer.valueOf(section));
                                     }
@@ -267,6 +286,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                                 new Response.ErrorListener() {
                                     @Override
                                     public void onErrorResponse(VolleyError error) {
+                                        progressDialog.dismiss();
                                         Toast.makeText(getActivity(), "Task could not be deleted", Toast.LENGTH_SHORT).show();
                                     }
                                 });
