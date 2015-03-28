@@ -58,26 +58,26 @@
 
       // Set chart options
       var options = {'title':'Project Status',
-                     'titleTextStyle': {color: 'black', fontName: 'Arial', fontSize: '70', fontWidth: 'normal'},
+                     'titleTextStyle': {color: 'black', fontName: 'Arial', fontSize: 60, fontWidth: 'normal'},
                      'width':1200,
                      'height':1200,
-                     'fontSize': 40,
+                     'fontSize': 30,
                      'pieSliceText': 'value'};
 
       var myOptions = {'title':'My Tasks Status',
-                     'titleTextStyle': {color: 'black', fontName: 'Arial', fontSize: '70', fontWidth: 'normal'},
+                     'titleTextStyle': {color: 'black', fontName: 'Arial', fontSize: 60, fontWidth: 'normal'},
                      'width':1200,
                      'height':1200,
-                     'fontSize': 40,
+                     'fontSize': 30,
                      'pieSliceText': 'value'};
 
 
         var labelOptions = {
-            chart:{
-                'title':'Project Status by Labels',
-                'titleTextStyle': {color: 'black', fontName: 'Arial', fontSize: '70', fontWidth: 'normal'},
-                'fontSize': 50
-            }
+			title:'Project Status by Labels',
+            titleTextStyle: {color: 'black', fontName: 'Arial', fontSize: 60},
+			legend: {position: 'right'},
+			vAxis:{title:'# Labels'},
+			fontSize:30
         };
 
 
@@ -89,7 +89,7 @@
       projectChart.draw(projectData, options);
       var myTasksChart = new google.visualization.PieChart(document.getElementById('my_tasks_chart_div'));
       myTasksChart.draw(myTasksData, myOptions);
-      var labelChart = new google.charts.Bar(document.getElementById('labels_char_div'));
+      var labelChart = new google.visualization.ColumnChart(document.getElementById('labels_char_div'));
       labelChart.draw(labelData, labelOptions);
     }
     </script>
