@@ -17,12 +17,14 @@ public class ApiUtilities {
         final static public String NAME_KEY = "name";
         final static public String SESSION_ID_KEY = "sessionId";
         final static public String PROJECT_ID_KEY = "projectId";
+        final static public String PROJECT_NAME_KEY = "projectName";
 
         final static public String PASSWORD_MISSING = "SESSION_USER_PASSWORD_ERROR";
         final static public String EMAIL_MISSING = "SESSION_USER_EMAIL_ERROR";
         final static public String NAME_MISSING = "SESSION_USER_NAME_ERROR";
         final static public String SESSION_ID_MISSING = "SESSION_ID_ERROR";
         final static public int PROJECT_ID_MISSING = -1;
+        final static public String PROJECT_NAME_MISSING = "SESSION_PROJECT_NAME_ERROR";
 
         public static void storeSession(String sessionId, Context context) {
             SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("store", 0);
@@ -66,6 +68,17 @@ public class ApiUtilities {
 
         public static Long getProjectId(Context context) {
             return context.getApplicationContext().getSharedPreferences("store", 0).getLong(PROJECT_ID_KEY, PROJECT_ID_MISSING);
+        }
+
+        public static void storeProjectName(String projectName, Context context) {
+            SharedPreferences sharedPref = context.getApplicationContext().getSharedPreferences("store", 0);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(PROJECT_NAME_KEY, projectName);
+            editor.commit();
+        }
+
+        public static String getProjectName(Context context) {
+            return context.getApplicationContext().getSharedPreferences("store", 0).getString(PROJECT_NAME_KEY, PROJECT_NAME_MISSING);
         }
 
         public static void storePassword(String password, Context context) {

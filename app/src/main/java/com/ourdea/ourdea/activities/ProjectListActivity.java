@@ -90,8 +90,10 @@ public class ProjectListActivity extends ListActivity {
 
         ProjectDto project = mAdapter.getItem(position);
         Long projectId = project.getProjectId();
+        String projectName = project.getName();
 
         ApiUtilities.Session.storeProjectId(projectId, this);
+        ApiUtilities.Session.storeProjectName(projectName, this);
 
         Intent activeProjectActivity = new Intent(ProjectListActivity.this, DashboardActivity.class);
         startActivity(activeProjectActivity);

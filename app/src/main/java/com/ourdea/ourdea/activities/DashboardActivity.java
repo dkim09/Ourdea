@@ -1,8 +1,12 @@
 package com.ourdea.ourdea.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ShareActionProvider;
 import android.widget.TextView;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
@@ -43,6 +47,7 @@ public class DashboardActivity extends DrawerActivity {
     private boolean finishLoadInProgress;
     private boolean finishLoadDone;
 
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -255,5 +260,30 @@ public class DashboardActivity extends DrawerActivity {
         @JavascriptInterface
         public String getDoneLabels() { return doneLabels; }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu resource file.
+        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+
+        // Fetch and store ShareActionProvider
+        mShareActionProvider = (ShareActionProvider) menu.findItem(R.id.action_share_project).getActionProvider();
+        mShareActionProvider.setShareIntent(doShare());
+
+        // Return true to display menu
+        return true;
+    }
+
+    public Intent doShare() {
+        // populate the share intent with data
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, "Hey, I'd like to invite you to my project \"" +
+                ApiUtilities.Session.getProjectName(this) + "\":" + "\n\nProjectID: " + ApiUtilities.Session.getProjectId(this)
+                + "\nPassword: " + ApiUtilities.Session.getPassword(this));
+        return intent;
+    }
+
+
 
 }
