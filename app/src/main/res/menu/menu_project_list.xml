@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ourdea.ourdea.activities.ProjectListActivity">
+    <item android:id="@+id/action_add_project" android:title="Add"
+        android:icon="@drawable/ic_action_add_task" android:showAsAction="always" />
+    <item android:id="@+id/action_join_project" android:title="Join"
+        android:icon="@drawable/ic_action_join_project" android:showAsAction="always" />
+</menu>

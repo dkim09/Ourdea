@@ -1,5 +1,7 @@
 package com.ourdea.ourdea.dto;
 
+import org.json.JSONObject;
+
 public class ProjectDto {
 
     private Long projectId;
@@ -11,6 +13,15 @@ public class ProjectDto {
     public ProjectDto(String name, String password) {
         this.name = name;
         this.password = password;
+    }
+
+    public ProjectDto(JSONObject jsonObject) {
+        try {
+            this.name = jsonObject.getString("name");
+            this.projectId = jsonObject.getLong("projectId");
+        } catch (Exception exception) {
+
+        }
     }
 
     public Long getProjectId() {

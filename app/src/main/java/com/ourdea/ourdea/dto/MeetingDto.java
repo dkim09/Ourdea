@@ -3,9 +3,11 @@ package com.ourdea.ourdea.dto;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MeetingDto {
 
@@ -43,13 +45,27 @@ public class MeetingDto {
 
             JSONArray agreementsJSON = json.getJSONArray("agreements");
             for (int a = 0; a < agreementsJSON.length(); a++) {
-                JSONObject agreement = agreementsJSON.getJSONObject(0);
+                JSONObject agreement = agreementsJSON.getJSONObject(a);
 
                 this.agreements.add(agreement.getString("email"));
             }
-        } catch (Exception exception) {
+        } catch (JSONException exception) {
             Log.d("JSON_ERROR", "Error parsing MeetingJSON into MeetingDto");
         }
+    }
+
+    public static List<MeetingDto> getAllFromJSONArray(JSONArray arrayResponse) {
+        List<MeetingDto> listOfMeetings = new ArrayList<>(arrayResponse.length());
+
+        try {
+            for (int a = 0; a < arrayResponse.length(); a++) {
+                listOfMeetings.add(new MeetingDto(arrayResponse.getJSONObject(a)));
+            }
+        } catch (JSONException jsonException) {
+            Log.d("JSON_ERROR", "Error parsing MeetingJSONArray into List of MeetingDto");
+        }
+
+        return listOfMeetings;
     }
 
     public MeetingDto(String name, String description, Long time, String location, Long project) {
@@ -131,4 +147,5 @@ public class MeetingDto {
     public void setActive(Boolean active) {
         this.active = active;
     }
+
 }

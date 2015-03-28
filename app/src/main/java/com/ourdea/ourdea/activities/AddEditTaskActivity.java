@@ -2,6 +2,7 @@ package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,7 @@ import com.ourdea.ourdea.resources.LabelResource;
 import com.ourdea.ourdea.resources.ProjectResource;
 import com.ourdea.ourdea.resources.TagResource;
 import com.ourdea.ourdea.resources.TaskResource;
+import com.ourdea.ourdea.utilities.LoadingSpinner;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,6 +53,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
     private String status;
 
+    LoadingSpinner loadingSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +65,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
         taskId = intent.getStringExtra("taskId");
 
         final Context context = this;
+        loadingSpinner = new LoadingSpinner(findViewById(R.id.loading));
 
         // Get references to UI elements
         final AutoCompleteTextView labelAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.label_autocomplete);
@@ -75,6 +80,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
         if (taskId != null) {
             setTitle("Edit Task");
             saveTaskButton.setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.container).setVisibility(View.VISIBLE);
         }
 
         // Set listener on save task button
@@ -97,15 +104,18 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                         taskDueDateTime,
                         status);
 
+                final ProgressDialog progressDialog = ProgressDialog.show(AddEditTaskActivity.this, "", "Saving task...", false, false);
                 TaskResource.update(taskId, taskToUpdate, context, new Response.Listener() {
                     @Override
                     public void onResponse(Object response) {
+                        progressDialog.dismiss();
                         finish();
                         Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
                         Toast.makeText(AddEditTaskActivity.this, "Task could not be saved", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -123,6 +133,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
 
         // Load task if needed
         if (taskId != null) {
+            loadingSpinner.show();
             TaskResource.get(taskId, context,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -136,6 +147,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                             setFormattedDateFromCalendar();
                             setFormattedTimeFromCalendar();
                             status = task.getStatus();
+                            loadingSpinner.hide();
+                            findViewById(R.id.container).setVisibility(View.VISIBLE);
 
                             Log.d("SERVER_SUCCESS", "Task loaded");
                         }
@@ -339,6 +352,8 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                 return false;
             }
 
+            final ProgressDialog progressDialog = ProgressDialog.show(AddEditTaskActivity.this, "", "Saving task...", false, false);
+
             if (taskId == null) {
                 TaskDto newTask = new TaskDto(nameValue, descriptionValue, assigneeValue, labelValue, taskDueDateTime, "todo");
 
@@ -346,6 +361,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
+                                progressDialog.dismiss();
                                 Toast.makeText(AddEditTaskActivity.this, "Task created", Toast.LENGTH_SHORT).show();
                                 finish();
                                 Log.d("SERVER_SUCCESS", "Task created");
@@ -354,6 +370,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
                                 Log.d("SERVER_ERROR", "Task could not be created");
                             }
                         });
@@ -363,6 +380,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                         new Response.Listener() {
                             @Override
                             public void onResponse(Object response) {
+                                progressDialog.dismiss();
                                 finish();
                                 Toast.makeText(AddEditTaskActivity.this, "Task saved", Toast.LENGTH_SHORT).show();
                                 Log.d("SERVER_SUCCESS", "Task saved");
@@ -371,6 +389,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
                                 Log.d("SERVER_ERROR", "Task could not be saved");
                             }
                         });

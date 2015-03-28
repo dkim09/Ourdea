@@ -1,6 +1,7 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -94,28 +95,36 @@ public class DrawerActivity extends Activity {
                 return;
             }
 
-            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
             switch (drawerItem) {
                 case "Tasks":
-                    intent = new Intent(getApplicationContext(), TaskActivity.class);
+                    startActivity(new Intent(getApplicationContext(), TaskActivity.class));
                     break;
                 case "Dashboard":
+                    startActivity(new Intent(getApplicationContext(), DashboardActivity.class));
                     break;
                 case "Chat":
-                    intent = new Intent(getApplicationContext(), ChatActivity.class);
+                    startActivity(new Intent(getApplicationContext(), ChatActivity.class));
                     break;
                 case "Meetings":
-                    intent = new Intent(getApplicationContext(), MeetingActivity.class);
+                    startActivity(new Intent(getApplicationContext(), MeetingActivity.class));
                     break;
                 case "Map":
-                    intent = new Intent(getApplicationContext(), MapActivity.class);
+                    startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                    break;
+                case "Switch Project":
+                    startActivity(new Intent(getApplicationContext(), ProjectListActivity.class));
                     break;
                 case "Logout":
+                    final ProgressDialog progressDialog = ProgressDialog.show(DrawerActivity.this, "", "Logging out...", false, false);
+
                     UserResource.logout(getApplicationContext(), new Response.Listener() {
                         @Override
                         public void onResponse(Object response) {
                             Toast.makeText(getApplicationContext(), "Logged out!", Toast.LENGTH_SHORT).show();
                             ApiUtilities.Session.clearSession(getApplicationContext());
+
+                            progressDialog.dismiss();
+
                             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -123,12 +132,12 @@ public class DrawerActivity extends Activity {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(), "Could not logout!", Toast.LENGTH_SHORT).show();
                         }
                     });
+                    break;
             }
-
-            startActivity(intent);
         }
     }
 

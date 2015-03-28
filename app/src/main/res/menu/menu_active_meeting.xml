@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.ourdea.ourdea.activities.ActiveMeetingActivity">
+
+    <item android:id="@+id/action_accept_meeting" android:title="Accept"
+        android:showAsAction="always" android:icon="@drawable/ic_action_done" android:visible="false"/>
+
+    <item android:id="@+id/action_reject_meeting" android:title="Reject"
+        android:showAsAction="always" android:icon="@drawable/ic_action_remove" android:visible="false"/>
+
+
+</menu>

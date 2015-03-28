@@ -16,6 +16,21 @@ import java.util.Map;
 
 public class MeetingResource {
 
+    public static void get(final Long id, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, ApiUtilities.SERVER_ADDRESS + "/meeting/" + id, null, successResponse, errorResponse) {
+            @Override
+            public Map<String, String> getHeaders() {
+                Map<String, String>  params = new HashMap<>();
+                params.put("Cookie", ApiUtilities.Session.getSession(context));
+
+                return params;
+            }
+        };
+
+        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+    }
+
     public static void create(final MeetingDto meeting, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JSONObject params = new JSONObject();
         try {

@@ -1,6 +1,7 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Menu;
@@ -110,16 +111,20 @@ public class AddMeetingActivity extends Activity implements PickerResponse {
             }
 
             MeetingDto meeting = new MeetingDto(meetingName, meetingDescription, meetingDue.getTimeInMillis(), meetingLocation, ApiUtilities.Session.getProjectId(this));
+            final ProgressDialog progressDialog = ProgressDialog.show(AddMeetingActivity.this, "", "Requesting meeting...", false, false);
+
             MeetingResource.create(meeting, this, new Response.Listener() {
                 @Override
                 public void onResponse(Object response) {
+                    progressDialog.dismiss();
                     Toast.makeText(context, "Meeting requested!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, "Could not create meeting request (is there one already active?)", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                    Toast.makeText(context, "Could not create meeting request (do you have more than 1 person in the project?)", Toast.LENGTH_SHORT).show();
                 }
             });
 

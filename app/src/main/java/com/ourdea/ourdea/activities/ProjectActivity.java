@@ -1,6 +1,7 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -33,21 +34,26 @@ public class ProjectActivity extends Activity {
         final EditText projectPass = (EditText) findViewById(R.id.join_project_password);
         final Button joinProjectButton = (Button) findViewById(R.id.join_project);
 
-        /*if (!ApiUtilities.Session.getProjectId(this).equals(ApiUtilities.Session.PROJECT_ID_MISSING)) {
-            Intent goMainScreen = new Intent(ProjectActivity.this, DashboardActivity.class);
-            startActivity(goMainScreen);
-        }*/
-
         joinProjectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    final String idValue = projectId.getText().toString();
-                    final String passValue = projectPass.getText().toString();
+                final String idValue = projectId.getText().toString();
+                final String passValue = projectPass.getText().toString();
 
-                    ProjectResource.join(idValue, passValue, 0, 0, context,
+                if (idValue.equals("")) {
+                    Toast.makeText(ProjectActivity.this, "ID cannot be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (passValue.equals("")) {
+                    Toast.makeText(ProjectActivity.this, "Password cannot be blank", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                final ProgressDialog progressDialog = ProgressDialog.show(ProjectActivity.this, "", "Joining project...", false, false);
+                ProjectResource.join(idValue, passValue, 0, 0, context,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(ProjectActivity.this, "Joined project", Toast.LENGTH_SHORT).show();
                                     Log.d("SERVER_SUCCESS", "Joined project");
                                     try {
@@ -61,6 +67,7 @@ public class ProjectActivity extends Activity {
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "Could not join project - are you already part of it?", Toast.LENGTH_SHORT).show();
                                     Log.d("SERVER_ERROR", "Project could not be found");
                                 }

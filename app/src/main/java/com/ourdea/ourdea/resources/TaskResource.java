@@ -19,18 +19,18 @@ public class TaskResource {
 
     public static void get(final String id, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, ApiUtilities.SERVER_ADDRESS + "/task/" + id, null, successResponse, errorResponse) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String>  params = new HashMap<>();
-                params.put("Cookie", ApiUtilities.Session.getSession(context));
+            (Request.Method.GET, ApiUtilities.SERVER_ADDRESS + "/task/" + id, null, successResponse, errorResponse) {
+        @Override
+        public Map<String, String> getHeaders() {
+            Map<String, String>  params = new HashMap<>();
+            params.put("Cookie", ApiUtilities.Session.getSession(context));
 
-                return params;
-            }
-        };
+            return params;
+        }
+    };
 
-        RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
-    }
+    RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
+}
 
     public static void getAll(String type, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest

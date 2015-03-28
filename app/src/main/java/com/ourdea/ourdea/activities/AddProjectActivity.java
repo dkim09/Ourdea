@@ -2,6 +2,7 @@ package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,10 +45,13 @@ public class AddProjectActivity extends Activity {
 
                 ProjectDto project = new ProjectDto(nameValue, passValue);
 
+                final ProgressDialog progressDialog = ProgressDialog.show(AddProjectActivity.this, "", "Creating project...", false, false);
+
                 ProjectResource.create(project, 0, 0, context,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(final JSONObject response) {
+                                progressDialog.dismiss();
                                 Toast.makeText(AddProjectActivity.this, "Project created", Toast.LENGTH_SHORT).show();
                                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AddProjectActivity.this);
                                 alertDialogBuilder.setTitle("Project created");
@@ -74,6 +78,7 @@ public class AddProjectActivity extends Activity {
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
                                 Toast.makeText(AddProjectActivity.this, "Project could not be created", Toast.LENGTH_SHORT).show();
                                 Log.d("SERVER_ERROR", "Project could not be created");
                             }

@@ -88,7 +88,7 @@ public class LoginActivity extends Activity {
                                     ApiUtilities.Session.storePassword(password, LoginActivity.this);
                                     ApiUtilities.Session.storeName(name, LoginActivity.this);
 
-                                    Intent goMainScreen = new Intent(LoginActivity.this, ProjectActivity.class);
+                                    Intent goMainScreen = new Intent(LoginActivity.this, ProjectListActivity.class);
                                     startActivity(goMainScreen);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
