@@ -12,14 +12,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.google.android.gms.common.api.Api;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.adapters.ProjectListAdapter;
 import com.ourdea.ourdea.dto.ProjectDto;
+import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.ProjectResource;
 import com.ourdea.ourdea.fragments.ProjectListContent;
 
@@ -27,7 +30,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 
-public class ProjectListActivity extends Activity {
+public class ProjectListActivity extends ListActivity {
 
     final Context context = this;
 
@@ -40,15 +43,19 @@ public class ProjectListActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_project_list);
 
         mAdapter = new ProjectListAdapter(this, R.layout.item_project);
-        setContentView(R.layout.activity_project_list);
+        loadProjects();
+        setListAdapter(mAdapter);
 
     }
 
     private void loadProjects() {
 
-        ProjectResource.getAll(context,
+        String email = ApiUtilities.Session.getEmail(this);
+
+        ProjectResource.getAll(email, context,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -69,6 +76,7 @@ public class ProjectListActivity extends Activity {
     public void onResume() {
         super.onResume();
         loadProjects();
+
     }
 
     private void buildProjectList() {
@@ -78,6 +86,19 @@ public class ProjectListActivity extends Activity {
         }
 
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
+
+        ProjectDto project = mAdapter.getItem(position);
+        Long projectId = project.getProjectId();
+
+        ApiUtilities.Session.storeProjectId(projectId, this);
+
+        Intent activeProjectActivity = new Intent(ProjectListActivity.this, DashboardActivity.class);
+        startActivity(activeProjectActivity);
     }
 
 

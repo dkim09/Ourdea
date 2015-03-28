@@ -39,9 +39,9 @@ public class ProjectResource {
         RequestQueueSingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    public static void getAll(final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
+    public static void getAll(final String email, final Context context, Response.Listener successResponse, Response.ErrorListener errorResponse) {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (ApiUtilities.SERVER_ADDRESS + "/project/all", successResponse, errorResponse) {
+                (ApiUtilities.SERVER_ADDRESS + "/user/" + email + "/projects", successResponse, errorResponse) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<>();

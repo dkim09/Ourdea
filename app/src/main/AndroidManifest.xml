@@ -130,18 +130,17 @@
         <service android:name=".gcm.GCMIntentService" />
 
         <activity
-<<<<<<< Updated upstream
             android:name=".activities.ActiveMeetingActivity"
             android:label="@string/title_activity_active_meeting"
             android:parentActivityName=".activities.MeetingActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.ourdea.ourdea.activities.MeetingActivity" />
-=======
-            android:name=".activities.ProjectListActivity"
-            android:label="@string/title_activity_project_list" >
->>>>>>> Stashed changes
         </activity>
+            <activity
+                android:name=".activities.ProjectListActivity"
+                android:label="@string/title_activity_project_list" >
+            </activity>
     </application>
 
 </manifest>

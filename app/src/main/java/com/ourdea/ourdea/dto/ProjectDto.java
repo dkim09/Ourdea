@@ -18,6 +18,7 @@ public class ProjectDto {
     public ProjectDto(JSONObject jsonObject) {
         try {
             this.name = jsonObject.getString("name");
+            this.projectId = jsonObject.getLong("projectId");
         } catch (Exception exception) {
 
         }

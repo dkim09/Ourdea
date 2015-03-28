@@ -49,10 +49,7 @@
     <string name="title_join_project">Join Project</string>
     <string name="title_activity_create_project">Create Project</string>
     <string name="title_project_details">Project Details</string>
-<<<<<<< Updated upstream
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_active_meeting">Meeting Request</string>
-=======
->>>>>>> Stashed changes
 
 </resources>
