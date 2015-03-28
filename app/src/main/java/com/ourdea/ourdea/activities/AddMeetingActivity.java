@@ -124,7 +124,7 @@ public class AddMeetingActivity extends Activity implements PickerResponse {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     progressDialog.dismiss();
-                    Toast.makeText(context, "Could not create meeting request (is there one already active?)", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Could not create meeting request (do you have more than 1 person in the project?)", Toast.LENGTH_SHORT).show();
                 }
             });
 
