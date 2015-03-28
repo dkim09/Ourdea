@@ -1,44 +1,38 @@
 package com.ourdea.ourdea.activities;
 
-import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.google.android.gms.common.api.Api;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.adapters.ProjectListAdapter;
 import com.ourdea.ourdea.dto.ProjectDto;
+import com.ourdea.ourdea.fragments.ProjectListContent;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.ProjectResource;
-import com.ourdea.ourdea.fragments.ProjectListContent;
+import com.ourdea.ourdea.utilities.LoadingSpinner;
 
 import org.json.JSONArray;
 
-import java.util.ArrayList;
 
 public class ProjectListActivity extends ListActivity {
 
     final Context context = this;
 
-    private AbsListView mListView;
-
     private ArrayAdapter<ProjectDto> mAdapter;
 
     private ProjectListContent projectListContent;
+
+    private LoadingSpinner loadingSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,27 +40,29 @@ public class ProjectListActivity extends ListActivity {
         setContentView(R.layout.activity_project_list);
 
         mAdapter = new ProjectListAdapter(this, R.layout.item_project);
+        loadingSpinner = new LoadingSpinner(findViewById(R.id.loading));
         loadProjects();
         setListAdapter(mAdapter);
-
     }
 
     private void loadProjects() {
-
         String email = ApiUtilities.Session.getEmail(this);
 
+        loadingSpinner.show();
         ProjectResource.getAll(email, context,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
                         Log.d("SERVER_SUCCESS", "Project list retrieved");
                         projectListContent = new ProjectListContent(response);
+                        loadingSpinner.hide();
                         buildProjectList();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        loadingSpinner.hide();
                         Log.d("SERVER_ERROR", "Project list cannot be retrieved");
                     }
                 });
@@ -75,8 +71,8 @@ public class ProjectListActivity extends ListActivity {
     @Override
     public void onResume() {
         super.onResume();
+        mAdapter.clear();
         loadProjects();
-
     }
 
     private void buildProjectList() {
