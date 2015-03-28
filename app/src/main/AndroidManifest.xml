@@ -91,7 +91,11 @@
         </activity>
         <activity
             android:name=".activities.ProjectActivity"
-            android:label="@string/title_activity_project" >
+            android:label="@string/title_activity_project"
+            android:parentActivityName=".activities.ProjectListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.ourdea.ourdea.activities.ProjectListActivity" />
         </activity>
         <activity
             android:name=".activities.AddProjectActivity"
