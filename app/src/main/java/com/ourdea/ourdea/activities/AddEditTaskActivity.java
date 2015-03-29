@@ -247,10 +247,12 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
         int id = item.getItemId();
 
         if (id == R.id.action_delete_task) {
+            final ProgressDialog progressDialog = ProgressDialog.show(AddEditTaskActivity.this, "", "Deleting task...", false, false);
             TaskResource.delete(taskId, this,
                     new Response.Listener() {
                         @Override
                         public void onResponse(Object response) {
+                            progressDialog.dismiss();
                             Toast.makeText(AddEditTaskActivity.this, "Task deleted", Toast.LENGTH_SHORT).show();
                             Log.d("SERVER_SUCCESS", "Task deleted");
                             finish();
@@ -259,15 +261,18 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
                             Log.d("SERVER_ERROR", "Task could not be deleted");
                         }
                     });
             return true;
         } else if (id == R.id.action_done_task) {
+            final ProgressDialog progressDialog = ProgressDialog.show(AddEditTaskActivity.this, "", "Updating task...", false, false);
             TaskResource.updateStatus(taskId, "completed", this,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            progressDialog.dismiss();
                             Toast.makeText(AddEditTaskActivity.this, "Task completed", Toast.LENGTH_SHORT).show();
                             Log.d("SERVER_SUCCESS", "Task marked as done");
                             finish();
@@ -276,14 +281,17 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
                             Log.d("SERVER_ERROR", "Task cannot be marked as done");
                         }
                     });
         } else if (id == R.id.action_in_progress_task) {
+            final ProgressDialog progressDialog = ProgressDialog.show(AddEditTaskActivity.this, "", "Updating task...", false, false);
             TaskResource.updateStatus(taskId, "inprogress", this,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
+                            progressDialog.dismiss();
                             Toast.makeText(AddEditTaskActivity.this, "Task in progress", Toast.LENGTH_SHORT).show();
                             Log.d("SERVER_SUCCESS", "Task marked as inprogress");
                             finish();
@@ -292,6 +300,7 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
+                            progressDialog.dismiss();
                             Log.d("SERVER_ERROR", "Task cannot be marked as inprogress");
                         }
                     });
@@ -314,16 +323,19 @@ public class AddEditTaskActivity extends Activity implements PickerResponse {
             builder.setPositiveButton("Tag", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+                    final ProgressDialog progressDialog = ProgressDialog.show(AddEditTaskActivity.this, "", "Tagging user...", false, false);
                     TagResource.tag(userAutoFill.getText().toString(), Long.parseLong(taskId), message.getText().toString(), getApplicationContext(),
                             new Response.Listener() {
                                 @Override
                                 public void onResponse(Object response) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "User tagged", Toast.LENGTH_SHORT).show();
                                 }
                             },
                             new Response.ErrorListener() {
                                 @Override
                                 public void onErrorResponse(VolleyError error) {
+                                    progressDialog.dismiss();
                                     Toast.makeText(getApplicationContext(), "Could not tag user", Toast.LENGTH_SHORT).show();
                                 }
                             });
