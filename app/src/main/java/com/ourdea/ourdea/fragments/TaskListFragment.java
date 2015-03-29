@@ -25,7 +25,6 @@ import com.ourdea.ourdea.activities.TaskActivity;
 import com.ourdea.ourdea.adapters.TaskListAdapter;
 import com.ourdea.ourdea.dto.TaskDto;
 import com.ourdea.ourdea.resources.TaskResource;
-import com.ourdea.ourdea.utilities.LoadingSpinner;
 
 import org.json.JSONArray;
 
@@ -43,7 +42,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
 
     private TaskListContent taskListContent;
 
-    private LoadingSpinner loadingSpinner;
+    //private LoadingSpinner loadingSpinner;
 
     public static TaskListFragment newInstance(String position) {
         TaskListFragment fragment = new TaskListFragment();
@@ -83,7 +82,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                 break;
         }
 
-        loadingSpinner.show();
+        //loadingSpinner.show();
         TaskResource.getAll(taskListType, this.getActivity(),
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -91,13 +90,13 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
                         Log.d("SERVER_SUCCESS", "Task list retrieved");
                         taskListContent = new TaskListContent(response);
                         buildTaskList();
-                        loadingSpinner.hide();
+                        //loadingSpinner.hide();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        loadingSpinner.hide();
+                        //loadingSpinner.hide();
                         Log.d("SERVER_ERROR", "Task list cannot be retrieved");
                     }
                 });
@@ -127,7 +126,7 @@ public class TaskListFragment extends Fragment implements AbsListView.OnItemClic
         mListView.setOnItemClickListener(this);
         mListView.setOnItemLongClickListener(this);
 
-       loadingSpinner = new LoadingSpinner(view.findViewById(R.id.loading));
+       //loadingSpinner = new LoadingSpinner(view.findViewById(R.id.loading));
 
         return view;
     }
