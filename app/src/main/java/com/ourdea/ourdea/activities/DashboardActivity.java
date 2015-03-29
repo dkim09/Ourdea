@@ -1,12 +1,16 @@
 package com.ourdea.ourdea.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -21,9 +25,13 @@ import com.ourdea.ourdea.resources.TaskResource;
 
 import org.json.JSONArray;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 public class DashboardActivity extends DrawerActivity {
     private WebView webView;
     private Context mContext;
+    private ImageView imageView;
 
     private TaskListContent toDoTaskListContent;
     private TaskListContent inProgressTaskListContent;
@@ -68,24 +76,29 @@ public class DashboardActivity extends DrawerActivity {
         super.setActivity("Dashboard");
         super.onCreate(savedInstanceState);
 
-        loadTasks();
-
-        TextView dashboardTitle = (TextView) findViewById(R.id.dash_title);
-        final TextView dashboardSubTitle = (TextView) findViewById(R.id.dash_subtitle);
-        dashboardTitle.setText("Welcome " + ApiUtilities.Session.getName(DashboardActivity.this));
-
-
+        imageView = (ImageView)findViewById(R.id.image);
         webView = (WebView)findViewById(R.id.web);
         webView.addJavascriptInterface(new WebAppInterface(), "Android");
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
+        webView.setBackgroundColor(0);
 
-        dashboardSubTitle.setText("You are in project " + ApiUtilities.Session.getProjectName(this));
+        try {
+            InputStream ims = getAssets().open("default_msg.png");
+            // load image as Drawable
+            Drawable d = Drawable.createFromStream(ims, null);
+            // set image to ImageView
+            imageView.setImageDrawable(d);
+        }catch(IOException ex){
+            return;
+        }
+        loadTasks();
     }
 
     public void loadTasks(){
+        final ProgressDialog progressDialog = ProgressDialog.show(mContext, "", "Loading Dashboard...", false, false);
         TaskResource.getAll("inprogress", mContext,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -109,10 +122,13 @@ public class DashboardActivity extends DrawerActivity {
                             doneLabels = labelAnalyzer.getDone();
                             Log.d("labelanalyzer", labels + " | " + toDoLabels + " | " + inProgressLabels + " | " +doneLabels);
                             //Check if there are any tasks
-                            if ((numToDo + numInProgress + numDone) == 0)
-                                webView.loadUrl("file:///android_asset/default.html");
-                            else
+                            progressDialog.dismiss();
+                            if ((numToDo + numInProgress + numDone) == 0) {
+                                imageView.setVisibility(View.VISIBLE);
+                                webView.setVisibility(View.GONE);
+                            }else {
                                 webView.loadUrl("file:///android_asset/chart.html");
+                            }
                         }
 
                     }
@@ -147,10 +163,13 @@ public class DashboardActivity extends DrawerActivity {
                             doneLabels = labelAnalyzer.getDone();
                             Log.d("labelanalyzer", labels + " | " + toDoLabels + " | " + inProgressLabels + " | " +doneLabels);
                             //Check if there are any tasks
-                            if ((numToDo + numInProgress + numDone) == 0)
-                                webView.loadUrl("file:///android_asset/default.html");
-                            else
+                            progressDialog.dismiss();
+                            if ((numToDo + numInProgress + numDone) == 0) {
+                                imageView.setVisibility(View.VISIBLE);
+                                webView.setVisibility(View.INVISIBLE);
+                            }else {
                                 webView.loadUrl("file:///android_asset/chart.html");
+                            }
                         }
                     }
                 },
@@ -183,10 +202,13 @@ public class DashboardActivity extends DrawerActivity {
                             doneLabels = labelAnalyzer.getDone();
                             Log.d("labelanalyzer", labels + " | " + toDoLabels + " | " + inProgressLabels + " | " +doneLabels);
                             //Check if there are any tasks
-                            if ((numToDo + numInProgress + numDone) == 0)
-                                webView.loadUrl("file:///android_asset/default.html");
-                            else
+                            progressDialog.dismiss();
+                            if ((numToDo + numInProgress + numDone) == 0) {
+                                imageView.setVisibility(View.VISIBLE);
+                                webView.setVisibility(View.INVISIBLE);
+                            }else {
                                 webView.loadUrl("file:///android_asset/chart.html");
+                            }
                         }
                     }
                 },
