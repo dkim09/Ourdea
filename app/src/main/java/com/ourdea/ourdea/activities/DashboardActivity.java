@@ -5,11 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ShareActionProvider;
-import android.widget.TextView;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.widget.ShareActionProvider;
+import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -18,11 +17,9 @@ import com.ourdea.ourdea.dto.TaskDto;
 import com.ourdea.ourdea.fragments.TaskListContent;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.LabelAnalyzer;
-import com.ourdea.ourdea.resources.ProjectResource;
 import com.ourdea.ourdea.resources.TaskResource;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class DashboardActivity extends DrawerActivity {
     private WebView webView;
@@ -85,19 +82,7 @@ public class DashboardActivity extends DrawerActivity {
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
 
-        ProjectResource.get(ApiUtilities.Session.getProjectId(this), this, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    dashboardSubTitle.setText("You are in project " + response.getString("name"));
-                } catch (Exception exception) {}
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("SERVER_ERROR", "Could not get project");
-            }
-        });
+        dashboardSubTitle.setText("You are in project " + ApiUtilities.Session.getProjectName(this));
     }
 
     public void loadTasks(){
@@ -278,7 +263,7 @@ public class DashboardActivity extends DrawerActivity {
         // populate the share intent with data
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, "Hey, I'd like to invite you to my project \"" +
+        intent.putExtra(Intent.EXTRA_TEXT, "Hey, I'd like to invite you to my Ourdea project \"" +
                 ApiUtilities.Session.getProjectName(this) + "\":" + "\n\nProjectID: " + ApiUtilities.Session.getProjectId(this)
                 + "\nPassword: " + ApiUtilities.Session.getProjectPassword(this));
         return intent;

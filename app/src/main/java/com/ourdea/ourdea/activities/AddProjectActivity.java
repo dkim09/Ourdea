@@ -22,6 +22,7 @@ import com.ourdea.ourdea.dto.ProjectDto;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.ProjectResource;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AddProjectActivity extends Activity {
@@ -57,6 +58,32 @@ public class AddProjectActivity extends Activity {
                                 alertDialogBuilder.setTitle("Project created");
                                 try {
                                     alertDialogBuilder.setMessage("Share this information with others to let them join your project:\n\nProject ID: " + response.getString("projectId") + "\nPassword: " + response.getString("password"));
+                                    alertDialogBuilder.setNeutralButton("Share", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            try {
+                                                ApiUtilities.Session.storeProjectId(response.getLong("projectId"), getApplicationContext());
+                                                ApiUtilities.Session.storeProjectName(response.getString("name"), getApplicationContext());
+                                                ApiUtilities.Session.storeProjectPassword(response.getString("password"), getApplicationContext());
+                                            } catch (Exception exception) {
+                                            }
+                                            Intent goMainScreen = new Intent(AddProjectActivity.this, DashboardActivity.class);
+                                            startActivity(goMainScreen);
+
+                                            Intent sendIntent = new Intent();
+                                            sendIntent.setAction(Intent.ACTION_SEND);
+                                            try {
+                                                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, I'd like to invite you to my Ourdea project \"" +
+                                                        response.getString("name") + "\":" + "\n\nProjectID: " + response.getLong("projectId")
+                                                        + "\nPassword: " + response.getString("password"));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+                                            sendIntent.setType("text/plain");
+                                            startActivity(sendIntent);
+                                        }
+                                    });
                                     alertDialogBuilder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -89,7 +116,6 @@ public class AddProjectActivity extends Activity {
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
