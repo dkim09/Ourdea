@@ -5,6 +5,7 @@ import android.provider.CalendarContract;
 
 import com.ourdea.ourdea.calendar.providerwrapper.Event;
 import com.ourdea.ourdea.calendar.providerwrapper.Reminder;
+import com.ourdea.ourdea.dto.MeetingDto;
 import com.ourdea.ourdea.dto.TaskDto;
 import com.ourdea.ourdea.resources.ApiUtilities;
 
@@ -87,5 +88,24 @@ public class CalendarManager {
         }
 
         return null;
+    }
+
+    public void createEvent(MeetingDto meeting) {
+        Event newEvent = new Event();
+
+        newEvent.title = buildEventTitleFromMeetingAndProject(meeting);
+        newEvent.description = meeting.getDescription();;
+        newEvent.startDate = String.valueOf(meeting.getTime());
+        newEvent.endDate = String.valueOf(meeting.getTime());
+        newEvent.create(context.getContentResolver());
+
+        Reminder reminder = new Reminder();
+        reminder.method = CalendarContract.Reminders.METHOD_EMAIL;
+        reminder.minutesBefore = 30;
+        reminder.addToEvent(context.getContentResolver(), newEvent);
+    }
+
+    private String buildEventTitleFromMeetingAndProject(MeetingDto meeting) {
+        return ApiUtilities.Session.getProjectName(context) + ": " + meeting.getName();
     }
 }

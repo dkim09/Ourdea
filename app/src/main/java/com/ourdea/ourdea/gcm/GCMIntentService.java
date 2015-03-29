@@ -16,6 +16,7 @@ import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.activities.DashboardActivity;
 import com.ourdea.ourdea.calendar.CalendarManager;
 import com.ourdea.ourdea.calendar.CalendarSettings;
+import com.ourdea.ourdea.dto.MeetingDto;
 import com.ourdea.ourdea.dto.TaskDto;
 
 public class GCMIntentService extends IntentService {
@@ -28,9 +29,10 @@ public class GCMIntentService extends IntentService {
     public static final String TYPE = "type";
     public static final String TYPE_NEWREGID = "new_reg_id";
     public static final String TYPE_NOTIFICATION = "notification";
-    public static final String TYPE_CREATE_TASK_EVENT = "create_event";
-    public static final String TYPE_UPDATE_TASK_EVENT = "update_event";
-    public static final String TYPE_DELETE_TASK_EVENT = "delete_event";
+    public static final String TYPE_CREATE_TASK_EVENT = "create_task_event";
+    public static final String TYPE_UPDATE_TASK_EVENT = "update_task_event";
+    public static final String TYPE_DELETE_TASK_EVENT = "delete_task_event";
+    public static final String TYPE_CREATE_MEETING_EVENT = "create_meeting_event";
     public static final String TITLE = "title";
     public static final String MESSAGE = "message";
 	
@@ -95,8 +97,24 @@ public class GCMIntentService extends IntentService {
                 TaskDto task = buildTaskFromBundle(extras);
                 CalendarManager.getInstance(getApplicationContext()).deleteTask(task);
             }
+        } else if (type.equals(TYPE_CREATE_MEETING_EVENT)) {
+            if (CalendarSettings.isCalendarEnabled(getApplicationContext())) {
+                MeetingDto meeting = buildMeetingFromBundle(extras);
+                CalendarManager.getInstance(getApplicationContext()).createEvent(meeting);
+            }
         }
 	}
+
+    private MeetingDto buildMeetingFromBundle(Bundle extras) {
+        MeetingDto meeting = new MeetingDto();
+
+        meeting.setName(extras.getString("name"));
+        meeting.setId(Long.valueOf(extras.getString("id")));
+        meeting.setDescription(extras.getString("description"));
+        meeting.setTime(Long.valueOf(extras.getString("dueDate")));
+
+        return meeting;
+    }
 
     private TaskDto buildTaskFromBundle(Bundle extras) {
         TaskDto task = new TaskDto();
