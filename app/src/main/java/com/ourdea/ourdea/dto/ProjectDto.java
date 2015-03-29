@@ -19,6 +19,7 @@ public class ProjectDto {
         try {
             this.name = jsonObject.getString("name");
             this.projectId = jsonObject.getLong("projectId");
+            this.password = jsonObject.getString("password");
         } catch (Exception exception) {
 
         }

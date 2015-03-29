@@ -58,6 +58,8 @@ public class ProjectActivity extends Activity {
                                     Log.d("SERVER_SUCCESS", "Joined project");
                                     try {
                                         ApiUtilities.Session.storeProjectId(response.getLong("projectId"), getApplicationContext());
+                                        ApiUtilities.Session.storeProjectName(response.getString("name"), getApplicationContext());
+                                        ApiUtilities.Session.storeProjectPassword(response.getString("password"), getApplicationContext());
                                     } catch (Exception exception) {
                                     }
                                     Intent goMainScreen = new Intent(ProjectActivity.this, DashboardActivity.class);

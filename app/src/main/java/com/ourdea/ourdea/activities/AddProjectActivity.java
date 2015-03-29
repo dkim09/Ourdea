@@ -63,6 +63,8 @@ public class AddProjectActivity extends Activity {
                                             dialog.dismiss();
                                             try {
                                                 ApiUtilities.Session.storeProjectId(response.getLong("projectId"), getApplicationContext());
+                                                ApiUtilities.Session.storeProjectName(response.getString("name"), getApplicationContext());
+                                                ApiUtilities.Session.storeProjectPassword(response.getString("password"), getApplicationContext());
                                             } catch (Exception exception) {
                                             }
                                             Intent goMainScreen = new Intent(AddProjectActivity.this, DashboardActivity.class);

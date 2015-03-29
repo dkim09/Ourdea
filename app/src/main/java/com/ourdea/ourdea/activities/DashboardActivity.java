@@ -280,7 +280,7 @@ public class DashboardActivity extends DrawerActivity {
         intent.setType("text/plain");
         intent.putExtra(Intent.EXTRA_TEXT, "Hey, I'd like to invite you to my project \"" +
                 ApiUtilities.Session.getProjectName(this) + "\":" + "\n\nProjectID: " + ApiUtilities.Session.getProjectId(this)
-                + "\nPassword: " + ApiUtilities.Session.getPassword(this));
+                + "\nPassword: " + ApiUtilities.Session.getProjectPassword(this));
         return intent;
     }
 
