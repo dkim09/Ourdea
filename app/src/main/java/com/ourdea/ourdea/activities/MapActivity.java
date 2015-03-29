@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -116,6 +117,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                     }
                 });
             } else {
+                Toast.makeText(this, "Unable to get location data", Toast.LENGTH_LONG).show();
                 Log.d("TESTING", "error: no location data");
             }
         }
