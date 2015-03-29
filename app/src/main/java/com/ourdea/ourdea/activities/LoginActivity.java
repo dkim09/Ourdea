@@ -1,7 +1,10 @@
 package com.ourdea.ourdea.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.ourdea.ourdea.R;
+import com.ourdea.ourdea.calendar.CalendarSettings;
 import com.ourdea.ourdea.dto.UserDto;
 import com.ourdea.ourdea.resources.ApiUtilities;
 import com.ourdea.ourdea.resources.UserResource;
@@ -38,6 +42,28 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_login);
+
+        // Enable calendar sync?
+        if (!CalendarSettings.askedUserToEnableCalendarBefore(this)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setTitle("Calendar");
+            builder.setCancelable(false);
+            builder.setMessage("Would you like Ourdea to sync tasks assigned to you to your calendar?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    CalendarSettings.enableCalendar(LoginActivity.this);
+                }
+            });
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    CalendarSettings.disableCalendar(LoginActivity.this);
+                }
+            }).show();
+
+            CalendarSettings.doNotAskUserToEnableCalendarAgain(LoginActivity.this);
+        }
 
         // Hide action bar
         getActionBar().hide();
@@ -74,11 +100,13 @@ public class LoginActivity extends Activity {
 
                 UserDto user = new UserDto(email, password);
 
+                final ProgressDialog progressDialog = ProgressDialog.show(LoginActivity.this, "", "Logging in...", false, false);
                 UserResource.login(user, getApplicationContext(),
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
+                                    progressDialog.dismiss();
                                     Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_LONG).show();
                                     String name = response.getString(getString(R.string.PROPERTY_USER_NAME));
                                     String password = response.getString("password");
@@ -97,7 +125,8 @@ public class LoginActivity extends Activity {
                         },
                         new Response.ErrorListener() {
                             @Override
-                            public void onErrorResponse(VolleyError error) {
+                                public void onErrorResponse(VolleyError error) {
+                                progressDialog.dismiss();
                                 Log.d("TESTING", "error: " + error.getMessage());
                                 Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_LONG).show();
                             }

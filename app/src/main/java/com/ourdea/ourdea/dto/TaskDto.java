@@ -13,6 +13,10 @@ public class TaskDto {
     private String name;
     private String status;
 
+    public TaskDto() {
+
+    }
+
     public TaskDto(String name, String description, String assignedTo, String label, Calendar dueDateTime, String status) {
         this.name = name;
         this.description = description;
@@ -74,4 +78,31 @@ public class TaskDto {
         return status;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    public void setDueDate(Long dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

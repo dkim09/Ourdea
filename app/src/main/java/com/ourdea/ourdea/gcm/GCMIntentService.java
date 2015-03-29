@@ -14,6 +14,9 @@ import android.util.Log;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.ourdea.ourdea.R;
 import com.ourdea.ourdea.activities.DashboardActivity;
+import com.ourdea.ourdea.calendar.CalendarManager;
+import com.ourdea.ourdea.calendar.CalendarSettings;
+import com.ourdea.ourdea.dto.TaskDto;
 
 public class GCMIntentService extends IntentService {
 
@@ -25,6 +28,9 @@ public class GCMIntentService extends IntentService {
     public static final String TYPE = "type";
     public static final String TYPE_NEWREGID = "new_reg_id";
     public static final String TYPE_NOTIFICATION = "notification";
+    public static final String TYPE_CREATE_TASK_EVENT = "create_event";
+    public static final String TYPE_UPDATE_TASK_EVENT = "update_event";
+    public static final String TYPE_DELETE_TASK_EVENT = "delete_event";
     public static final String TITLE = "title";
     public static final String MESSAGE = "message";
 	
@@ -74,9 +80,35 @@ public class GCMIntentService extends IntentService {
 	        editor.commit();
 		} else if (type.equals(TYPE_NOTIFICATION)){
             sendNotification(extras);
-		}
+		} else if (type.equals(TYPE_CREATE_TASK_EVENT)) {
+            if (CalendarSettings.isCalendarEnabled(getApplicationContext())) {
+                TaskDto task = buildTaskFromBundle(extras);
+                CalendarManager.getInstance(getApplicationContext()).createEvent(task);
+            }
+        } else if (type.equals(TYPE_UPDATE_TASK_EVENT)) {
+            if (CalendarSettings.isCalendarEnabled(getApplicationContext())) {
+                TaskDto task = buildTaskFromBundle(extras);
+                CalendarManager.getInstance(getApplicationContext()).updateTask(task);
+            }
+        } else if (type.equals(TYPE_DELETE_TASK_EVENT)) {
+            if (CalendarSettings.isCalendarEnabled(getApplicationContext())) {
+                TaskDto task = buildTaskFromBundle(extras);
+                CalendarManager.getInstance(getApplicationContext()).deleteTask(task);
+            }
+        }
 	}
-	
+
+    private TaskDto buildTaskFromBundle(Bundle extras) {
+        TaskDto task = new TaskDto();
+
+        task.setName(extras.getString("name"));
+        task.setId(extras.getString("id"));
+        task.setDescription(extras.getString("description"));
+        task.setDueDate(Long.valueOf(extras.getString("dueDate")));
+
+        return task;
+    }
+
     // Put the message into a notification and post it.
     private void sendNotification(Bundle extras) {
     	String title = extras.getString(TITLE);
