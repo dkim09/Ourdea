@@ -4,6 +4,8 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript">
 
+    var maxVal = 0;
+
      function parseLabels(type, stringArray){
         var array = [];
         array.push(type);
@@ -12,12 +14,23 @@
      }
 
      function parseLabelVals(type, stringArray){
+        setMaxVal(stringArray);
         var array = [];
         array.push(type);
         array = array.concat(stringArray.split(",").map(Number));
+
         return array;
      }
 
+
+     function setMaxVal(stringArray){
+        var array = stringArray.split(",").map(Number);
+        for (var i = 0; i < array.length; i++){
+            if (array[i] > maxVal)
+                maxVal = array[i];
+        }
+
+     }
       // Load the Visualization API and the piechart package.
       google.load('visualization', '1.0', {'packages':['corechart', 'bar']});
 
@@ -75,17 +88,23 @@
 
 
         var labelOptions = {
-			title:'Project Status by Labels',
+			title:"Project Status by Label",
             titleTextStyle: {color: 'black', fontName: 'Arial', fontSize: 60},
 			legend: {position: 'right'},
-			vAxis:{title:'# Labels'},
+			vAxis:{title:'# Labels',
+			        min: 0,
+			        max: maxVal,
+			        viewWindow:{min:0,
+			                   max: maxVal
+			        }
+			},
 			fontSize:30,
 			backgroundColor: 'transparent'
         };
 
 
-        //var labelDataView = new google.visualization.DataView(labelData);
-        //labelDataView.setColumns([{calc: function(data, row) { return data.getFormattedValue(row, 0); }, type:'string'}, 1]);
+        var labelDataView = new google.visualization.DataView(labelData);
+        labelDataView.setColumns([{calc: function(data, row) { return data.getFormattedValue(row, 0); }, type:'string'}, 1]);
 
       // Instantiate and draw our chart, passing in some options.
       var projectChart = new google.visualization.PieChart(document.getElementById('project_chart_div'));
